@@ -1,0 +1,26 @@
+{
+  "name": "social-app",
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": {
+    "packages": [
+      "app/*"
+    ]
+  },
+  "scripts": {
+    "client-dev": "pnpm --filter client run dev",
+    "server-dev": "pnpm --filter server run dev"
+  },
+  "devDependencies": {
+    "eslint": "^8.38.0",
+    "typescript": "^5.0.2"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tanstack/react-query": "^4.29.15",
+    "@trpc/client": "^10.31.0",
+    "@trpc/react-query": "^10.31.0",
+    "@trpc/server": "^10.31.0"
+  }
+}
