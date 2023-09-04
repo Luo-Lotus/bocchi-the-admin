@@ -1,0 +1,54 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator trpc {
+  provider           = "prisma-trpc-generator"
+  output             = "./trpc"
+  withMiddleware     = "../middleware"
+  withZod            = false
+  withShield         = false
+  contextPath        = "../context"
+  trpcOptionsPath    = "../trpcOptions"
+  isGenerateSelect   = true
+  isGenerateInclude  = true
+  showModelNameInProcedure  = false
+  generateModelActions = "aggregate,aggregateRaw,count,create,createMany,delete,deleteMany,findFirst,findFirstOrThrow,findMany,findRaw,findUnique,findUniqueOrThrow,groupBy,update,updateMany,upsert"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String
+  password  String
+  avatar String
+  isBanned Boolean @default(false)
+  ruleId Int
+  rule Role @relation(fields: [ruleId], references: [id])
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt @default(now())
+  deleteAt DateTime?
+  version Int @default(1)
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+  roleName String
+  rulePermission Int[]
+  user User[]
+}
+
+model Permission {
+  id Int @id @default(autoincrement())
+  name String
+  parentId Int @unique
+  parent Permission @relation("permissionTree", fields: [parentId], references: [id])
+  children Permission[] @relation("permissionTree")
+}
