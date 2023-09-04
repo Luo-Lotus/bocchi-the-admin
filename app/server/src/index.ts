@@ -7,7 +7,7 @@ import ws from '@fastify/websocket';
 import dotenv from 'dotenv';
 
 dotenv.config();
-
+console.log('current token:', process.env.JWT_SECRET);
 const server = fastify({
   maxParamLength: 5000,
 });
