@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch --tsconfig ./tsconfig.server.json ./src/index.ts",
-    "prisma-studio": "npx prisma studio"
+    "start": "tsx watch --tsconfig ./tsconfig.json ./src/index.ts",
+    "prisma-studio": "npx prisma studio",
+    "prisma-generate": "npx prisma generate"
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",

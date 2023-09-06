@@ -9,7 +9,7 @@
     ]
   },
   "scripts": {
-    "web-dev": "pnpm --filter client run dev",
+    "client-dev": "pnpm --filter client run dev",
     "server-dev": "pnpm --filter server run dev"
   },
   "author": "",
