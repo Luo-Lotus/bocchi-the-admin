@@ -1,9 +1,22 @@
 import { inferAsyncReturnType } from '@trpc/server';
 import { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify';
+import prisma from '../repository';
 
 export function createContext({ req, res }: CreateFastifyContextOptions) {
   return { req, res };
 }
 export type Context = inferAsyncReturnType<typeof createContext> & {
-  user?: any;
+  user?: inferAsyncReturnType<
+    typeof prisma.user.findUnique<
+      {
+        where: {
+          id: any;
+        };
+        include: {
+          rule: true;
+        };
+      },
+      undefined
+    >
+  >;
 };

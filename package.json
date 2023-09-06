@@ -10,7 +10,7 @@
   },
   "scripts": {
     "client-dev": "pnpm --filter client run dev",
-    "server-dev": "pnpm --filter server run dev"
+    "server-dev": "pnpm --filter server run start"
   },
   "author": "",
   "license": "ISC",

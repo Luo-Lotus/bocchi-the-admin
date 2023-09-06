@@ -1,5 +1,6 @@
+import trpc from '@/trpc';
 import { PageContainer } from '@ant-design/pro-components';
-import { Access, useAccess } from '@umijs/max';
+import { useAccess } from '@umijs/max';
 import { Button } from 'antd';
 
 const AccessPage: React.FC = () => {
@@ -11,9 +12,13 @@ const AccessPage: React.FC = () => {
         title: '权限示例',
       }}
     >
-      <Access accessible={access.canSeeAdmin}>
-        <Button>只有 Admin 可以看到这个按钮</Button>
-      </Access>
+      <Button
+        onClick={() => {
+          trpc.testRouter.authTest.query();
+        }}
+      >
+        点击向没有权限的接口发送请求
+      </Button>
     </PageContainer>
   );
 };

@@ -1,6 +1,13 @@
 import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET || '';
+
+if (!JWT_SECRET) {
+  console.warn(
+    '未设置JWT_SECRET环境变量，请在server项目根目录[.env]文件中设置',
+  );
+}
+
 const encode = (payload: any) => {
   return jwt.sign(payload, JWT_SECRET, {
     expiresIn: '7d',

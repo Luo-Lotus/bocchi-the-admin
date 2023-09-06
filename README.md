@@ -27,6 +27,16 @@ TODO:
 # Getting Start
 
 1. `pnpm install` 安装依赖
-2. `pnpm -F @monorepo/server run prisma-generate` 生成数据库字段类型
-3. `pnpm run client-dev` 启动client dev
-4. `pnpm run server-dev` 启动server dev
+2. 配置 `server` 环境变量
+
+```bash
+# app/sever/.env
+# 数据库推荐使用postgresQL，同时也支持MySQL和MongoDB，但是项目是根据postgresQL开发的，其他数据库可能会出现问题
+# 详见 https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/connect-your-database-typescript-postgresql
+DATABASE_URL="数据库地址"
+JWT_SECRET="jwt秘钥"
+```
+
+3. `pnpm -F @monorepo/server run prisma-generate` 生成数据库字段类型
+4. `pnpm run client-dev` 启动client dev
+5. `pnpm run server-dev` 启动server dev

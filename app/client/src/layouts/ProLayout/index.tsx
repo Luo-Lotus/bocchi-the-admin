@@ -1,11 +1,21 @@
+import router from '@/router';
 import { ProLayout } from '@ant-design/pro-components';
-import { Outlet } from '@umijs/max';
+import { Link, Outlet, useLocation } from '@umijs/max';
 
 export default function Page() {
-  console.log(11);
-
+  const { pathname } = useLocation();
   return (
-    <ProLayout title={'LotusAdmin'}>
+    <ProLayout
+      title={'Lotus Admin'}
+      route={router}
+      location={{ pathname }}
+      onClick={(e) => {
+        console.log(e);
+      }}
+      menuItemRender={(menuDataItem, dom) => (
+        <Link to={menuDataItem.path as string}>{dom}</Link>
+      )}
+    >
       <Outlet />
     </ProLayout>
   );

@@ -8,7 +8,6 @@ export default defineConfig({
       token: {
         colorPrimary: '#8219ff',
         colorInfo: '#8219ff',
-        colorBgBase: '#fef0ff',
       },
     },
   },

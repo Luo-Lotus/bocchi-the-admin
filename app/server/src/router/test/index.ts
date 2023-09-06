@@ -2,6 +2,7 @@ import { observable } from '@trpc/server/observable';
 import { router } from '@server/initTRPC';
 import zod from 'zod';
 import publicProcedure from '@server/procedure/public';
+import authProcedure from '../../procedure/auth';
 
 const nestedRouter = router({
   nestedTest: publicProcedure.query(() => {
@@ -10,13 +11,12 @@ const nestedRouter = router({
 });
 
 const testRouter = router({
-  getTestInfo: publicProcedure.input(zod.string()).query(({ input }) => {
-    return `哈哈${input}`;
-  }),
-  getMessages: publicProcedure.query(() => {
-    return ['这是第一条信息', '这是第二条信息'];
-  }),
-  nestedRouter,
+  /** 无权限接口测试 */
+  authTest: authProcedure
+    .meta({
+      permission: 1,
+    })
+    .query(() => null),
   webSocketTest: publicProcedure.subscription(() => {
     let time = 0;
     return observable((emit) => {
