@@ -30,7 +30,7 @@ const userRouter = router({
           authorization: JWTUtil.encode({ id: user.id }),
         };
       } else {
-        throwTRPCBadRequestError('登陆失败，请检查用户名或密码是否正确');
+        throwTRPCBadRequestError('登陆失败，请检查用户名或密码是否正确1');
       }
     }),
 });

@@ -1,4 +1,6 @@
 {
+  "name": "@monorepo/client",
+  "version": "1.0.0",
   "private": true,
   "author": "Lotus <272146019@qq.com>",
   "scripts": {
@@ -16,6 +18,8 @@
     "antd": "^5.8.6"
   },
   "devDependencies": {
+    "@monorepo/server": "workspace:^",
+
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "lint-staged": "^14.0.1",

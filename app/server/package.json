@@ -16,7 +16,8 @@
     "express": "4.18.2",
     "fastify": "^4.18.0",
     "jsonwebtoken": "^9.0.1",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "@prisma/client": "^4.16.1"
   },
   "author": "",
   "license": "ISC",
