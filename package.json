@@ -1,5 +1,5 @@
 {
-  "name": "lotus-admin",
+  "name": "bocchi-the-admin",
   "version": "1.0.0",
   "description": "",
   "private": true,
@@ -15,6 +15,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@monorepo/common": "workspace:^",
     "@tanstack/react-query": "^4.29.15",
     "@trpc/client": "^10.31.0",
     "@trpc/react-query": "^10.31.0",

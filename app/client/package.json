@@ -4,12 +4,13 @@
   "private": true,
   "author": "Lotus <272146019@qq.com>",
   "scripts": {
-    "dev": "max dev",
     "build": "max build",
+    "dev": "max dev",
+    "eject": "max g page --eject",
     "format": "prettier --cache --write .",
     "postinstall": "max setup",
-    "setup": "max setup",
-    "start": "npm run dev"
+    "preview": "max preview",
+    "setup": "max setup"
   },
   "dependencies": {
     "@ant-design/icons": "^5.2.6",
@@ -19,7 +20,6 @@
   },
   "devDependencies": {
     "@monorepo/server": "workspace:^",
-
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "lint-staged": "^14.0.1",

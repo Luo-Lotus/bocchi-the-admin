@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@monorepo/common':
+        specifier: workspace:^
+        version: link:app/common
       '@tanstack/react-query':
         specifier: ^4.29.15
         version: 4.29.15(react-dom@18.2.0)(react@18.2.0)
@@ -109,6 +112,9 @@ importers:
       '@fastify/websocket':
         specifier: ^8.1.0
         version: 8.1.0
+      '@monorepo/common':
+        specifier: workspace:^
+        version: link:../common
       '@prisma/client':
         specifier: ^4.16.1
         version: 4.16.1(prisma@4.16.1)

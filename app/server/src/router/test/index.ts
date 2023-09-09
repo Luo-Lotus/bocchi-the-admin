@@ -14,7 +14,7 @@ const testRouter = router({
   /** 无权限接口测试 */
   authTest: authProcedure
     .meta({
-      permission: 1,
+      permission: 543,
     })
     .query(() => null),
   webSocketTest: publicProcedure.subscription(() => {

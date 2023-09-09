@@ -5,20 +5,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator trpc {
-  provider           = "prisma-trpc-generator"
-  output             = "./trpc"
-  withMiddleware     = "../middleware"
-  withZod            = false
-  withShield         = false
-  contextPath        = "../context"
-  trpcOptionsPath    = "../trpcOptions"
-  isGenerateSelect   = true
-  isGenerateInclude  = true
-  showModelNameInProcedure  = false
-  generateModelActions = "aggregate,aggregateRaw,count,create,createMany,delete,deleteMany,findFirst,findFirstOrThrow,findMany,findRaw,findUnique,findUniqueOrThrow,groupBy,update,updateMany,upsert"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")

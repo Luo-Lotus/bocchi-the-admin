@@ -1,4 +1,5 @@
 import { defineConfig } from '@umijs/max';
+import router from '../src/router';
 
 export default defineConfig({
   antd: {
@@ -18,6 +19,8 @@ export default defineConfig({
   // layout: {
   //   title: '@umijs/max',
   // },
+  title: 'Bocchi The Admin!',
+  favicons: ['/favicon.png'],
   routes: [
     {
       path: '/login',
@@ -26,24 +29,11 @@ export default defineConfig({
     {
       path: '/',
       component: '@/layouts/ProLayout/index',
-      routes: [
-        {
-          name: '首页',
-          path: 'home',
-          component: './Home',
-        },
-        {
-          name: '权限演示',
-          path: 'access',
-          component: './Access',
-        },
-        {
-          name: ' CRUD 示例',
-          path: 'table',
-          component: './Table',
-        },
-      ],
+      routes: router.routes,
     },
   ],
   npmClient: 'pnpm',
+  codeSplitting: {
+    jsStrategy: 'granularChunks',
+  },
 });
