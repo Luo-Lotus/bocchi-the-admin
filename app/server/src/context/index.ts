@@ -13,7 +13,7 @@ export type Context = inferAsyncReturnType<typeof createContext> & {
           id: any;
         };
         include: {
-          rule: true;
+          role: true;
         };
       },
       undefined

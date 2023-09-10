@@ -16,7 +16,9 @@
     "@ant-design/icons": "^5.2.6",
     "@ant-design/pro-components": "^2.6.16",
     "@umijs/max": "^4.0.79",
-    "antd": "^5.8.6"
+    "@unocss/cli": "^0.55.7",
+    "antd": "^5.8.6",
+    "unocss": "^0.55.7"
   },
   "devDependencies": {
     "@monorepo/server": "workspace:^",

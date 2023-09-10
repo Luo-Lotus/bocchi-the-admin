@@ -13,7 +13,7 @@ const authMiddleWare = middleware(async (opt) => {
         id,
       },
       include: {
-        rule: true,
+        role: true,
       },
     });
   } catch (err: any) {

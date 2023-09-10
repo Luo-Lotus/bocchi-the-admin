@@ -1,7 +1,10 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "composite": true,
     "esModuleInterop": true,
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
     "paths": {
       "@server/*": ["./src/*"]
     }

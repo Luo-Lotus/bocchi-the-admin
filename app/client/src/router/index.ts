@@ -15,14 +15,14 @@ const router = {
       component: './Access',
     },
     {
-      name: ' CRUD 示例',
-      path: 'table',
-      component: './Table',
-    },
-    {
       name: '权限设置',
       path: 'auth',
       component: './Auth',
+    },
+    {
+      name: '角色管理',
+      path: 'role',
+      component: './Role',
     },
   ] as MenuDataItem[] &
     Exclude<ReturnType<typeof defineConfig>['routes'], false>,

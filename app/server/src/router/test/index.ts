@@ -9,7 +9,9 @@ const nestedRouter = router({
     return '嵌套路由测试';
   }),
 });
-
+zod.object({
+  name: zod.string(),
+});
 const testRouter = router({
   /** 无权限接口测试 */
   authTest: authProcedure

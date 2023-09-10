@@ -1,12 +1,12 @@
 import { mergeRouters, router } from '../initTRPC';
+import roleRouter from './Role';
 import userRouter from './User';
 import testRouter from './test';
-import PermissionRouter from './Permission';
 
 export const appRouter = router({
   testRouter,
   userRouter,
-  PermissionRouter,
+  roleRouter,
 });
 
 export type AppRouter = typeof appRouter;

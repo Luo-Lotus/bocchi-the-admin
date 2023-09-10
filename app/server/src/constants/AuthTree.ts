@@ -17,6 +17,22 @@ const AuthTree = {
       name: '更新',
     },
   },
+  roleModule: {
+    code: 5,
+    name: '角色模块',
+    create: {
+      code: 6,
+      name: '创建',
+    },
+    update: {
+      code: 7,
+      name: '更新',
+    },
+    delete: {
+      code: 8,
+      name: '删除',
+    },
+  },
 };
 
 export default AuthTree;

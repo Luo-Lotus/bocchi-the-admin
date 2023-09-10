@@ -5,36 +5,55 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator zod {
+  provider = "zod-prisma-types"
+  output = "../src/constants/zodSchema"
+  useMultipleFiles = true
+  writeBarrelFiles = true
+  createOptionalDefaultValuesTypes = true
+  createModelTypes = true
+  createInputTypes = false
+  createOutputTypes = false
+  createPartialTypes = true
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id Int @id @default(autoincrement())
-  username String
-  password  String
-  avatar String
-  isBanned Boolean @default(false)
-  ruleId Int
-  rule Role @relation(fields: [ruleId], references: [id])
+model Account {
+  // id Int @id @default(autoincrement())
+  account String
+  password String
+  email String?
+  phoneNumber String?
+  userId Int @unique @id
+  user User @relation(fields: [userId], references: [id])
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt @default(now())
   deleteAt DateTime?
-  version Int @default(1)
+  version Int @default(1) /// @zod.custom.omit([model, input])
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  username String
+  avatar String
+  isBanned Boolean @default(false)
+  roleId Int
+  role Role @relation(fields: [roleId], references: [id])
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt @default(now())
+  deleteAt DateTime?
+  version Int @default(1) /// @zod.custom.omit([model, input])
+  account Account?
 }
 
 model Role {
   id Int @id @default(autoincrement())
   roleName String
-  rulePermission Int[]
+  permissions Int[]
   user User[]
-}
-
-model Permission {
-  id Int @id @default(autoincrement())
-  name String
-  parentId Int @unique
-  parent Permission @relation("permissionTree", fields: [parentId], references: [id])
-  children Permission[] @relation("permissionTree")
+  version Int @default(1) /// @zod.custom.omit([model, input])
 }

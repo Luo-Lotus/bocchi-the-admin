@@ -12,7 +12,7 @@ const userRouter = router({
   signIn: publicProcedure
     .input(
       z.object({
-        username: z.string().max(15),
+        account: z.string().max(15),
         password: z
           .string()
           .regex(
@@ -22,13 +22,31 @@ const userRouter = router({
       }),
     )
     .mutation(async ({ input }) => {
-      const user = await prisma.user.findFirst({
-        where: input,
+      console.log(input);
+
+      const account = await prisma.account.findFirst({
+        where: {
+          password: input.password,
+          OR: [
+            {
+              account: input.account,
+            },
+            {
+              phoneNumber: input.account,
+            },
+            {
+              email: input.account,
+            },
+          ],
+        },
+        include: {
+          user: true,
+        },
       });
-      return user
+      return account
         ? {
-            user: exclude(user, ['password']),
-            authorization: JWTUtil.encode({ id: user.id }),
+            user: account.user,
+            authorization: JWTUtil.encode({ id: account.user.id }),
           }
         : throwTRPCBadRequestError('登陆失败，请检查用户名或密码是否正确');
     }),

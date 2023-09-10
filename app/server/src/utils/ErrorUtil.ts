@@ -1,9 +1,10 @@
 import { TRPCError } from '@trpc/server';
 
-export const throwTRPCBadRequestError = (message: string) => {
+export const throwTRPCBadRequestError = <T>(message: string, cause?: T) => {
   throw new TRPCError({
     message,
     code: 'BAD_REQUEST',
+    cause: cause,
   });
 };
 

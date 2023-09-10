@@ -6,7 +6,8 @@
   "scripts": {
     "start": "tsx watch --tsconfig ./tsconfig.json ./src/index.ts",
     "prisma-studio": "prisma studio",
-    "prisma-generate": "prisma generate"
+    "prisma-generate": "prisma generate",
+    "prisma-db-push": "prisma migrate dev"
   },
   "dependencies": {
     "@fastify/cors": "^8.3.0",
@@ -19,15 +20,15 @@
     "express": "4.18.2",
     "fastify": "^4.18.0",
     "jsonwebtoken": "^9.0.1",
-    "zod": "^3.21.4"
+    "prisma": "^4.16.1",
+    "zod": "^3.22.2"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@prisma/client": "^4.16.1",
     "@types/jsonwebtoken": "^9.0.2",
-    "prisma": "^4.16.1",
     "prisma-trpc-generator": "^1.4.1",
-    "tsx": "^3.12.7"
+    "tsx": "^3.12.7",
+    "zod-prisma-types": "^2.7.9"
   }
 }

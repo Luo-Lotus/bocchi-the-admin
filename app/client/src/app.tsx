@@ -11,3 +11,11 @@ export const getInitialState: RuntimeConfig['getInitialState'] = async () => {
   }
   return {};
 };
+
+// export const rootContainer: RuntimeConfig['rootContainer'] = async (dom) => {
+//   return (
+//     <trpc.Provider client={trpcClient} queryClient={queryClient}>
+//       <QueryClientProvider client={queryClient}>{dom}</QueryClientProvider>
+//     </trpc.Provider>
+//   );
+// };
