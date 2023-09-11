@@ -7,7 +7,7 @@ import { Button, Space, Tree } from 'antd';
 import _ from 'lodash';
 import styles from './index.less';
 
-type AuthTree = RouterOutput['PermissionRouter']['getAuthTree'];
+type AuthTree = RouterOutput['permissionRouter']['getAuthTree'];
 
 type TreeNode = {
   title?: ReactNode;
@@ -20,7 +20,7 @@ export default function Auth() {
   const [treeNode, setTreeNode] = useState<TreeNode>();
 
   useEffect(() => {
-    trpc.PermissionRouter.getAuthTree.query().then((res) => {
+    trpc.permissionRouter.getAuthTree.query().then((res) => {
       setTreeNode(toTreeNode(res));
     });
   }, []);

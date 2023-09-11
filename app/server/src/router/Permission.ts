@@ -2,7 +2,7 @@ import { router } from '../initTRPC';
 import authProcedure from '../procedure/auth';
 import AuthTree from '@server/constants/AuthTree';
 
-const PermissionRouter = router({
+const permissionRouter = router({
   getAuthTree: authProcedure
     .meta({
       permission: AuthTree.permissionModule.code,
@@ -10,4 +10,4 @@ const PermissionRouter = router({
     .query(() => AuthTree),
 });
 
-export default PermissionRouter;
+export default permissionRouter;
