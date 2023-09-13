@@ -3,6 +3,7 @@ import { Context } from './context';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
 import { formatErrorMessage } from './utils/zodUtil';
+import { handlePrismaError, handleZodError } from './utils/ErrorUtil';
 
 type Meta = {
   permission?: number;
@@ -14,13 +15,17 @@ const trpc = initTRPC
   .create({
     transformer: superjson,
     errorFormatter: ({ error, shape }) => {
-      const isZodError = error.cause instanceof ZodError;
+      const prismaError = handlePrismaError(error);
+      const zodError = handleZodError(error);
       return {
         ...shape,
-        message: isZodError ? formatErrorMessage(error.message) : error.message,
+        message:
+          (zodError?.message as string) ||
+          (prismaError?.message as string) ||
+          error.message,
         data: {
           ...shape.data,
-          zodError: isZodError && error.cause.flatten(),
+          zodError: zodError?.data.zodError,
         },
       };
     },

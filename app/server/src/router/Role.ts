@@ -48,6 +48,7 @@ const roleRouter = router({
           orderBy: sort,
           where: filterParams,
         }),
+
         prisma.role.count({
           where: filterParams,
         }),

@@ -18,7 +18,8 @@
     "@umijs/max": "^4.0.79",
     "@unocss/cli": "^0.55.7",
     "antd": "^5.8.6",
-    "unocss": "^0.55.7"
+    "unocss": "^0.55.7",
+    "zustand": "^4.4.1"
   },
   "devDependencies": {
     "@monorepo/server": "workspace:^",

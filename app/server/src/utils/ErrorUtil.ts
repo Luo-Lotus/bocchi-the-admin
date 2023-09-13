@@ -1,4 +1,10 @@
+import {
+  PrismaClientKnownRequestError,
+  PrismaClientUnknownRequestError,
+} from '@prisma/client/runtime/library';
 import { TRPCError } from '@trpc/server';
+import { ZodError } from 'zod';
+import { formatErrorMessage } from './zodUtil';
 
 export const throwTRPCBadRequestError = <T>(message: string, cause?: T) => {
   throw new TRPCError({
@@ -13,4 +19,23 @@ export const throwTRPCBadUnauthorized = (message: string) => {
     message,
     code: 'UNAUTHORIZED',
   });
+};
+
+export const handlePrismaError = (error: TRPCError) => {
+  if (error.cause instanceof PrismaClientKnownRequestError) {
+    return {
+      message: error.cause.meta?.cause || '数据库操作错误',
+    };
+  }
+};
+
+export const handleZodError = (error: TRPCError) => {
+  if (error.cause instanceof ZodError) {
+    return {
+      message: formatErrorMessage(error.message),
+      data: {
+        zodError: error.cause.flatten(),
+      },
+    };
+  }
 };

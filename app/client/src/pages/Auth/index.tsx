@@ -64,6 +64,7 @@ export default function Auth() {
       {treeNode && (
         <Tree
           selectable={false}
+          // @ts-ignore
           treeData={[treeNode]}
           switcherIcon={
             <DownOutlined

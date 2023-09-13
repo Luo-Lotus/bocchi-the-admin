@@ -1,16 +1,17 @@
 import { AppRouter } from '@monorepo/server/src/router';
-import { QueryClient } from '@tanstack/react-query';
 import { createTRPCProxyClient, httpBatchLink, loggerLink } from '@trpc/client';
-import { createTRPCReact } from '@trpc/react-query';
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
+import _ from 'lodash';
 import SuperJSON from 'superjson';
 import { getToken } from '../utils/authUtil';
 import { customLink } from './links/customLink';
 
+const isProduction = process.env.NODE_ENV !== 'development';
+
 const client = createTRPCProxyClient<AppRouter>({
   transformer: SuperJSON,
-  links: [
-    loggerLink(),
+  links: _.compact([
+    isProduction && loggerLink(),
     customLink,
     httpBatchLink({
       url: 'http://localhost:3000/api',
@@ -21,7 +22,7 @@ const client = createTRPCProxyClient<AppRouter>({
         };
       },
     }),
-  ],
+  ]),
 });
 
 // export const trpc = createTRPCReact<AppRouter>();

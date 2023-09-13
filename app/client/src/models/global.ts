@@ -1,13 +1,12 @@
-// // 全局共享数据示例
-// import { DEFAULT_NAME } from '@/constants';
-// import { useState } from 'react';
+// 全局共享数据示例
 
-// const useUser = () => {
-//   const [name, setName] = useState<string>(DEFAULT_NAME);
-//   return {
-//     name,
-//     setName,
-//   };
-// };
+import useUser from './useUser';
 
-// export default useUser;
+const useGlobal = () => {
+  const userStore = useUser();
+  return {
+    userStore,
+  };
+};
+
+export default useGlobal;

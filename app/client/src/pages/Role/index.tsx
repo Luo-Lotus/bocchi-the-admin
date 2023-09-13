@@ -1,5 +1,6 @@
 import AuthTreeSelect from '@/components/AuthSelectTree';
 import trpc, { RouterOutput } from '@/trpc';
+import { withAuth } from '@/utils/authUtil';
 import {
   ActionType,
   BetaSchemaForm,
@@ -8,7 +9,8 @@ import {
   ProFormColumnsType,
   ProTable,
 } from '@ant-design/pro-components';
-import { Button, Popconfirm, Space, TreeSelect } from 'antd';
+import AuthTree from '@monorepo/common/AuthTree';
+import { Button, Popconfirm, Space, TreeSelect, message } from 'antd';
 import _ from 'lodash';
 import React, { useRef } from 'react';
 
@@ -66,7 +68,6 @@ const TableList: React.FC<unknown> = () => {
           <AuthTreeSelect
             multiple
             treeCheckable
-            labelInValue
             showCheckedStrategy={TreeSelect.SHOW_ALL}
           />
         );
@@ -77,28 +78,45 @@ const TableList: React.FC<unknown> = () => {
       dataIndex: 'options',
       valueType: 'option',
       render: (_, record) => (
-        <Space.Compact>
-          <BetaSchemaForm<Role>
-            layoutType="ModalForm"
-            initialValues={record}
-            width={400}
-            columns={schemas}
-            trigger={<Button type="link">编辑</Button>}
-            onFinish={async (value) => {
-              await updateRole.mutate({
-                ...value,
-                id: record.id,
-              });
-              actionRef.current?.reload();
-              return true;
-            }}
-          />
-          <Popconfirm title="确认删除？">
-            <Button danger type="link">
-              删除
-            </Button>
-          </Popconfirm>
-        </Space.Compact>
+        <Space>
+          {withAuth(
+            <BetaSchemaForm<Role>
+              layoutType="ModalForm"
+              initialValues={record}
+              width={400}
+              columns={schemas}
+              trigger={
+                <Button type="primary" size="small">
+                  编辑
+                </Button>
+              }
+              onFinish={async (value) => {
+                await updateRole.mutate({
+                  ...value,
+                  id: record.id,
+                });
+                actionRef.current?.reload();
+                return true;
+              }}
+            />,
+            AuthTree.roleModule.update.code,
+          )}
+          {withAuth(
+            <Popconfirm
+              title="确认删除？"
+              onConfirm={async () => {
+                await deleteRole.mutate(record.id);
+                message.success('删除成功');
+                actionRef.current?.reload();
+              }}
+            >
+              <Button danger size="small">
+                删除
+              </Button>
+            </Popconfirm>,
+            AuthTree.roleModule.delete.code,
+          )}
+        </Space>
       ),
       fixed: 'right',
     },
@@ -116,23 +134,26 @@ const TableList: React.FC<unknown> = () => {
         rowKey="id"
         size="small"
         search={{
-          labelWidth: 120,
+          span: 8,
+          labelWidth: 50,
         }}
         toolBarRender={() => [
-          <BetaSchemaForm<Role>
-            layoutType="ModalForm"
-            width={400}
-            columns={schemas}
-            trigger={<Button>新增</Button>}
-            onFinish={async (value) => {
-              await createRole.mutate(value);
-              actionRef.current?.reload();
-              return true;
-            }}
-          />,
+          withAuth(
+            <BetaSchemaForm<Role>
+              layoutType="ModalForm"
+              width={400}
+              columns={schemas}
+              trigger={<Button>新增</Button>}
+              onFinish={async (value) => {
+                await createRole.mutate(value);
+                actionRef.current?.reload();
+                return true;
+              }}
+            />,
+            AuthTree.roleModule.create.code,
+          ),
         ]}
         request={async (params, sorter, filter) => {
-          console.log(params, sorter, filter);
           const result = await queryRoles.query({
             page: {
               current: params.current!,
