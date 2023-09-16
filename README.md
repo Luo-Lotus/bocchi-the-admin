@@ -44,6 +44,6 @@ DATABASE_URL="数据库地址"
 JWT_SECRET="jwt秘钥"
 ```
 
-3. `pnpm -F @monorepo/server run prisma-generate` 生成数据库字段类型
+3. `pnpm -F @bta/server run prisma-generate` 生成数据库字段类型
 4. `pnpm run client-dev` 启动client dev
 5. `pnpm run server-dev` 启动server dev

@@ -1,4 +1,4 @@
-import type { AppRouter } from '@monorepo/server/src/router';
+import type { AppRouter } from '@bta/server/src/router';
 import { TRPCLink } from '@trpc/client';
 import { observable } from '@trpc/server/observable';
 import { message } from 'antd';

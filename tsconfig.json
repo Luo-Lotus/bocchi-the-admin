@@ -20,9 +20,8 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@monorepo/*": ["./app/*"],
-      "@server/*": ["./app/server/src/*"]
+      "@bta/*": ["./packages/*"]
     }
   },
-  "include": ["app"]
+  "include": ["packages"]
 }

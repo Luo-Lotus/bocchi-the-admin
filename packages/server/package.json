@@ -1,5 +1,5 @@
 {
-  "name": "@monorepo/server",
+  "name": "@bta/server",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,23 +12,20 @@
   "dependencies": {
     "@fastify/cors": "^8.3.0",
     "@fastify/websocket": "^8.1.0",
-    "@monorepo/common": "workspace:^",
     "@prisma/client": "^4.16.1",
     "@trpc/server": "^10.31.0",
-    "@types/express": "^4.17.17",
     "dotenv": "^16.3.1",
-    "express": "4.18.2",
     "fastify": "^4.18.0",
     "jsonwebtoken": "^9.0.1",
     "prisma": "^4.16.1",
     "zod": "^3.22.2"
   },
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.2",
     "prisma-trpc-generator": "^1.4.1",
     "tsx": "^3.12.7",
     "zod-prisma-types": "^2.7.9"
-  }
+  },
+  "author": "",
+  "license": "ISC"
 }

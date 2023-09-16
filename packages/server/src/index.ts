@@ -7,20 +7,21 @@ import ws from '@fastify/websocket';
 import dotenv from 'dotenv';
 
 dotenv.config();
-console.log('current token:', process.env.JWT_SECRET);
+
 const server = fastify({
   maxParamLength: 5000,
 });
 
 server.register(cors, {}); // 跨域
 server.register(ws); // webSocket
-// TRPC
+// TRPC配置
 server.register(fastifyTRPCPlugin, {
-  prefix: '/api',
-  useWSS: true,
-  trpcOptions: { router: appRouter, createContext },
+  prefix: '/api', // 路由前缀 如 localhost/api/xx/xx
+  useWSS: true, // 使用websocket
+  trpcOptions: { router: appRouter, createContext }, // trpc配置
 });
 
+// 启动项目
 (async () => {
   try {
     await server.listen({ port: 3000, host: '0.0.0.0' });

@@ -1,7 +1,7 @@
 import { RouterOutput } from '@/trpc';
 import { ReactNode } from 'react';
 
-import AuthTree from '@monorepo/common/AuthTree';
+import AuthTree from '@bta/common/AuthTree';
 import { TreeSelect, TreeSelectProps } from 'antd';
 import { default as _, default as lodash } from 'lodash';
 

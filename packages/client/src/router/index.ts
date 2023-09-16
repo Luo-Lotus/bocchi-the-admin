@@ -1,5 +1,5 @@
 import { MenuDataItem } from '@ant-design/pro-components';
-import AuthTree from '@monorepo/common/AuthTree';
+import AuthTree from '@bta/common/AuthTree';
 import { defineConfig } from '@umijs/max';
 
 const router = {

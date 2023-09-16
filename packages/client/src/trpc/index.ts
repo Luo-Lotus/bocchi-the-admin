@@ -1,4 +1,4 @@
-import { AppRouter } from '@monorepo/server/src/router';
+import { AppRouter } from '@bta/server/src/router';
 import { createTRPCProxyClient, httpBatchLink, loggerLink } from '@trpc/client';
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import _ from 'lodash';

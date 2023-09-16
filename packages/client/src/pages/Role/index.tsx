@@ -9,7 +9,7 @@ import {
   ProFormColumnsType,
   ProTable,
 } from '@ant-design/pro-components';
-import AuthTree from '@monorepo/common/AuthTree';
+import AuthTree from '@bta/common/AuthTree';
 import { Button, Popconfirm, Space, TreeSelect, message } from 'antd';
 import _ from 'lodash';
 import React, { useRef } from 'react';

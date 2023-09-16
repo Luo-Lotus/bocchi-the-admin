@@ -1,12 +1,12 @@
 {
-  "name": "@monorepo/common",
+  "name": "@bta/common",
   "version": "1.0.0",
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@monorepo/server": "workspace:*"
+    "@bta/server": "workspace:*"
   },
   "keywords": [],
   "author": "",

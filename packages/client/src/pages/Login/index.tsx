@@ -12,7 +12,7 @@ const Login = () => {
     <div className="login-container">
       <LoginFormPage<RouterInput['userRouter']['signIn']>
         backgroundImageUrl={backgroundUrl}
-        title="Lotus-Admin"
+        title="Bocchi The Admin!"
         subTitle="轻量级的全栈后台模板"
         onFinish={async (value) => {
           trpc.userRouter.signIn.mutate(value).then((res) => {

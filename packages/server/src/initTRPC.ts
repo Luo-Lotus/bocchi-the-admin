@@ -1,8 +1,6 @@
 import { initTRPC } from '@trpc/server';
 import { Context } from './context';
 import superjson from 'superjson';
-import { ZodError } from 'zod';
-import { formatErrorMessage } from './utils/zodUtil';
 import { handlePrismaError, handleZodError } from './utils/ErrorUtil';
 
 type Meta = {

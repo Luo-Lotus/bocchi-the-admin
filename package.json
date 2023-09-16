@@ -1,21 +1,23 @@
 {
   "name": "bocchi-the-admin",
   "version": "1.0.0",
-  "description": "",
+  "description": "Lotus <272146019@qq.com>",
   "private": true,
   "workspaces": {
     "packages": [
-      "app/*"
+      "packages/*"
     ]
   },
   "scripts": {
-    "client-dev": "pnpm --filter client run dev",
-    "server-dev": "pnpm --filter server run start"
+    "dev:client": "pnpm --filter client run dev",
+    "dev:server": "pnpm --filter server run start",
+    "changeset": "changeset",
+    "changeset-version": "changeset version"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@monorepo/common": "workspace:^",
+    "@bta/common": "workspace:^",
     "@tanstack/react-query": "^4.29.15",
     "@trpc/client": "^10.31.0",
     "@trpc/react-query": "^10.31.0",
@@ -27,6 +29,7 @@
     "superjson": "^1.13.1"
   },
   "devDependencies": {
+    "@changesets/cli": "^2.26.2",
     "@types/lodash": "^4.14.197",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
