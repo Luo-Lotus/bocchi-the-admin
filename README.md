@@ -13,6 +13,7 @@
 - _UI框架_ - **React**
 - _脚手架_ - **UmiJs**
 - _UI组件_ - **Ant Design**
+- _状态管理_ - **Zustand**
 
 后端:
 
@@ -20,7 +21,7 @@
 - _Web框架_ - **fastify**
 - _校验_ - **zod**
 
-## feature
+## Feature
 
 TODO:
 
@@ -44,6 +45,8 @@ DATABASE_URL="数据库地址"
 JWT_SECRET="jwt秘钥"
 ```
 
-3. `pnpm -F @bta/server run prisma-generate` 生成数据库字段类型
-4. `pnpm run client-dev` 启动client dev
-5. `pnpm run server-dev` 启动server dev
+3. 在 server 目录下，通过 prisma schema 迁移表到数据库 `npx prisma db push`
+4. 添加Role, User, Account数据， Account依赖User，User依赖，Role的Permissions数组可以暂时填1-8
+5. `pnpm -F @bta/server run prisma-generate` 生成数据库字段类型Role
+6. `pnpm run client-dev` 启动client dev
+7. `pnpm run server-dev` 启动server dev
