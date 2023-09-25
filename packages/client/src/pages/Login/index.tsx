@@ -1,6 +1,6 @@
 import backgroundUrl from '@/assets/images/background.jpg';
-import trpc, { RouterInput } from '@/trpc';
-import { setToken } from '@/utils/authUtil';
+import useUser from '@/models/useUser';
+import { RouterInput } from '@/trpc';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { LoginFormPage, ProFormText } from '@ant-design/pro-components';
 import { useNavigate } from '@umijs/max';
@@ -8,6 +8,7 @@ import './index.less';
 
 const Login = () => {
   const navigate = useNavigate();
+  const { signIn } = useUser();
   return (
     <div className="login-container">
       <LoginFormPage<RouterInput['userRouter']['signIn']>
@@ -15,8 +16,7 @@ const Login = () => {
         title="Bocchi The Admin!"
         subTitle="轻量级的全栈后台模板"
         onFinish={async (value) => {
-          trpc.userRouter.signIn.mutate(value).then((res) => {
-            res?.authorization && setToken(res?.authorization);
+          signIn(value).then(() => {
             navigate('/home');
           });
         }}

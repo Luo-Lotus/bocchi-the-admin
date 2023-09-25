@@ -14,7 +14,7 @@ export const throwTRPCBadRequestError = <T>(message: string, cause?: T) => {
   });
 };
 
-export const throwTRPCBadUnauthorized = (message: string) => {
+export const throwTRPCUnauthorized = (message: string) => {
   throw new TRPCError({
     message,
     code: 'UNAUTHORIZED',

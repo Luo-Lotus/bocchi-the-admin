@@ -16,7 +16,7 @@ import React, { useRef } from 'react';
 
 const { queryRoles, updateRole, createRole, deleteRole } = trpc.roleRouter;
 
-type Role = RouterOutput['roleRouter']['queryRoles']['data']['0'];
+type Role = RouterOutput['roleRouter']['queryRoles']['data'][number];
 
 type SchemaType<T> = ProColumns<T> & ProFormColumnsType<T>;
 

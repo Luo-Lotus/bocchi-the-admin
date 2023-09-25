@@ -7,6 +7,7 @@ import _ from 'lodash';
 import { exclude } from '../utils/objectUtils';
 import { throwTRPCBadRequestError } from '../utils/ErrorUtil';
 import authProcedure from '../procedure/auth';
+import { UserPartialSchema } from '../constants/zodSchema';
 
 const userRouter = router({
   signIn: publicProcedure
@@ -40,7 +41,11 @@ const userRouter = router({
           ],
         },
         include: {
-          user: true,
+          user: {
+            include: {
+              role: true,
+            },
+          },
         },
       });
       return account
@@ -51,6 +56,10 @@ const userRouter = router({
         : throwTRPCBadRequestError('登陆失败，请检查用户名或密码是否正确');
     }),
   getUserInfoByToken: authProcedure.query(({ ctx }) => ctx.user),
+  // createUser: authProcedure,
+  // queryUsers: authProcedure,
+  // updateUser: ,
+  // deleteUser: ,
 });
 
 export default userRouter;

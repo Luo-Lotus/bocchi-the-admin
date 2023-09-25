@@ -9,7 +9,8 @@ import {
   RoleSchema,
   SortOrderSchema,
 } from '../constants/zodSchema';
-import AuthTree from '../constants/AuthTree';
+import AuthTree from '@bta/common/AuthTree';
+import { paramsToFilter } from '../utils/objectUtils';
 
 const roleRouter = router({
   queryRoles: authProcedure
@@ -27,26 +28,14 @@ const roleRouter = router({
       }),
     )
     .query(async ({ input: { sort, filter, page } }) => {
-      const filterParams = {
-        ...filter,
-        roleName: _.isEmpty(filter?.roleName)
-          ? undefined
-          : {
-              contains: filter?.roleName,
-            },
-        permissions: _.isEmpty(filter?.permissions)
-          ? undefined
-          : {
-              hasSome: filter?.permissions,
-            },
-      };
+      const filterParams = paramsToFilter(filter || {});
 
       const result = await prisma.$transaction([
         prisma.role.findMany({
           skip: (page.current - 1) * page.pageSize,
           take: page.pageSize,
           orderBy: sort,
-          where: filterParams,
+          where: paramsToFilter(filter || {}),
         }),
 
         prisma.role.count({

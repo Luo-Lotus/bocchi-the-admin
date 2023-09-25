@@ -1,7 +1,7 @@
 import { middleware } from '@server/initTRPC';
 import prisma from '@server/repository';
 import JWTUtil from '../utils/JWTUtil';
-import { throwTRPCBadUnauthorized } from '../utils/ErrorUtil';
+import { throwTRPCUnauthorized } from '../utils/ErrorUtil';
 
 const authMiddleWare = middleware(async (opt) => {
   const token = opt.ctx.req.headers.authorization as string;
@@ -17,7 +17,7 @@ const authMiddleWare = middleware(async (opt) => {
       },
     });
   } catch (err: any) {
-    throwTRPCBadUnauthorized(err.message);
+    throwTRPCUnauthorized(err.message);
   }
 
   return opt.next();
