@@ -5,11 +5,11 @@ import { z } from 'zod';
 /////////////////////////////////////////
 
 export const AccountSchema = z.object({
+  id: z.number().int(),
   account: z.string(),
   password: z.string(),
   email: z.string().nullable(),
   phoneNumber: z.string().nullable(),
-  userId: z.number().int(),
   createAt: z.coerce.date(),
   updateAt: z.coerce.date(),
   deleteAt: z.coerce.date().nullable(),
@@ -31,6 +31,7 @@ export type AccountPartial = z.infer<typeof AccountPartialSchema>
 /////////////////////////////////////////
 
 export const AccountOptionalDefaultsSchema = AccountSchema.merge(z.object({
+  id: z.number().int().optional(),
   createAt: z.coerce.date().optional(),
   updateAt: z.coerce.date().optional(),
   // omitted: version: z.number().int().optional(),

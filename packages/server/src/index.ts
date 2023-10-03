@@ -8,6 +8,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const { PORT = 3000 } = process.env;
+
 const server = fastify({
   maxParamLength: 5000,
 });
@@ -24,8 +26,8 @@ server.register(fastifyTRPCPlugin, {
 // 启动项目
 (async () => {
   try {
-    await server.listen({ port: 3000, host: '0.0.0.0' });
-    console.log('服务器在3000端口启动!!');
+    await server.listen({ port: Number(PORT), host: '0.0.0.0' });
+    console.log(`server started on port ${PORT}`);
   } catch (err) {
     server.log.error(err);
     process.exit(1);

@@ -14,7 +14,7 @@ if (!JWT_SECRET) {
 const encode = (payload: any) => {
   return jwt.sign(payload, JWT_SECRET, {
     expiresIn: '7d',
-  });
+  }); 
 };
 
 const verify = (token: string) =>

@@ -14,6 +14,7 @@ export const UserSchema = z.object({
   updateAt: z.coerce.date(),
   deleteAt: z.coerce.date().nullable(),
   // omitted: version: z.number().int(),
+  accountId: z.number().int(),
 })
 
 export type User = z.infer<typeof UserSchema>

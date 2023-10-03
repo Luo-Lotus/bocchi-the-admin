@@ -4,10 +4,17 @@ import z from 'zod';
 import prisma from '../repository';
 import JWTUtil from '../utils/JWTUtil';
 import _ from 'lodash';
-import { exclude } from '../utils/objectUtils';
+import { exclude, paramsToFilter } from '../utils/objectUtils';
 import { throwTRPCBadRequestError } from '../utils/ErrorUtil';
 import authProcedure from '../procedure/auth';
-import { UserPartialSchema } from '../constants/zodSchema';
+import {
+  SortOrderSchema,
+  UserOptionalDefaults,
+  UserOptionalDefaultsSchema,
+  UserPartialSchema,
+  UserSchema,
+} from '../constants/zodSchema';
+import AuthTree from '@bta/common/AuthTree';
 
 const userRouter = router({
   signIn: publicProcedure
@@ -23,8 +30,6 @@ const userRouter = router({
       }),
     )
     .mutation(async ({ input }) => {
-      console.log(input);
-
       const account = await prisma.account.findFirst({
         where: {
           password: input.password,
@@ -51,15 +56,83 @@ const userRouter = router({
       return account
         ? {
             user: account.user,
-            authorization: JWTUtil.encode({ id: account.user.id }),
+            authorization: JWTUtil.encode({ id: account.user[0].id }),
           }
         : throwTRPCBadRequestError('登陆失败，请检查用户名或密码是否正确');
     }),
   getUserInfoByToken: authProcedure.query(({ ctx }) => ctx.user),
-  // createUser: authProcedure,
-  // queryUsers: authProcedure,
-  // updateUser: ,
-  // deleteUser: ,
+  queryUsers: authProcedure
+    .meta({
+      permission: AuthTree.userModule.code,
+    })
+    .input(
+      z.object({
+        sort: z.record(UserSchema.keyof(), SortOrderSchema).optional(),
+        filter: UserPartialSchema.optional(),
+        page: z.object({
+          current: z.number(),
+          pageSize: z.number(),
+        }),
+      }),
+    )
+    .query(async ({ input: { sort, filter, page } }) => {
+      const filterParams = paramsToFilter(filter || {});
+
+      const result = await prisma.$transaction([
+        prisma.user.findMany({
+          skip: (page.current - 1) * page.pageSize,
+          take: page.pageSize,
+          orderBy: sort,
+          where: filterParams,
+        }),
+
+        prisma.user.count({
+          where: filterParams,
+        }),
+      ]);
+      return {
+        data: result[0],
+        count: result[1],
+      };
+    }),
+
+  updateUser: authProcedure
+    .meta({
+      permission: AuthTree.userModule.update.code,
+    })
+    .input(UserPartialSchema.required({ id: true }))
+    .mutation(async ({ input: user }) => {
+      await prisma.user.update({
+        where: {
+          id: user.id,
+        },
+        data: user,
+      });
+    }),
+
+  createUser: authProcedure
+    .meta({
+      permission: AuthTree.userModule.create.code,
+    })
+    .input(UserOptionalDefaultsSchema)
+    .mutation(async ({ input }) => {
+      await prisma.user.create({
+        data: input,
+      });
+    }),
+
+  deleteUser: authProcedure
+    .meta({
+      permission: AuthTree.userModule.delete.code,
+    })
+    .input(z.number())
+    .mutation(async ({ input }) => {
+      await prisma.user.delete({
+        where: {
+          id: input,
+        },
+      });
+    }),
 });
 
 export default userRouter;

@@ -125,7 +125,7 @@ const TableList: React.FC<unknown> = () => {
   return (
     <PageContainer
       header={{
-        title: '权限管理',
+        title: '角色管理',
       }}
     >
       <ProTable<Role>
@@ -171,7 +171,8 @@ const TableList: React.FC<unknown> = () => {
         rowSelection={{}}
         tableAlertRender={({ selectedRowKeys }) => (
           <div>
-            已选择 <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a>项
+            已选择
+            <a className="font-medium">{selectedRowKeys.length}</a>项
           </div>
         )}
       />

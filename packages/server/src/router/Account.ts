@@ -2,25 +2,25 @@ import { z } from 'zod';
 import { router } from '../initTRPC';
 import authProcedure from '../procedure/auth';
 import prisma from '../repository';
-import _ from 'lodash';
+import _, { omit } from 'lodash';
 import {
-  RoleOptionalDefaultsSchema,
-  RolePartialSchema,
-  RoleSchema,
   SortOrderSchema,
+  AccountOptionalDefaultsSchema,
+  AccountPartialSchema,
+  AccountSchema,
 } from '../constants/zodSchema';
 import AuthTree from '@bta/common/AuthTree';
 import { paramsToFilter } from '../utils/objectUtils';
 
-const roleRouter = router({
-  queryRoles: authProcedure
+const accountRouter = router({
+  queryAccounts: authProcedure
     .meta({
-      permission: AuthTree.roleModule.code,
+      permission: AuthTree.accountModule.code,
     })
     .input(
       z.object({
-        sort: z.record(RoleSchema.keyof(), SortOrderSchema).optional(),
-        filter: RolePartialSchema.optional(),
+        sort: z.record(AccountSchema.keyof(), SortOrderSchema).optional(),
+        filter: AccountPartialSchema.optional(),
         page: z.object({
           current: z.number(),
           pageSize: z.number(),
@@ -31,55 +31,55 @@ const roleRouter = router({
       const filterParams = paramsToFilter(filter || {});
 
       const result = await prisma.$transaction([
-        prisma.role.findMany({
+        prisma.account.findMany({
           skip: (page.current - 1) * page.pageSize,
           take: page.pageSize,
           orderBy: sort,
           where: filterParams,
         }),
 
-        prisma.role.count({
+        prisma.account.count({
           where: filterParams,
         }),
       ]);
       return {
-        data: result[0],
+        data: result[0].map((item) => omit(item, 'password')),
         count: result[1],
       };
     }),
 
-  updateRole: authProcedure
+  updateAccount: authProcedure
     .meta({
-      permission: AuthTree.roleModule.update.code,
+      permission: AuthTree.accountModule.update.code,
     })
-    .input(RolePartialSchema.required({ id: true }))
-    .mutation(async ({ input: role }) => {
-      await prisma.role.update({
+    .input(AccountPartialSchema.required({ id: true }))
+    .mutation(async ({ input: account }) => {
+      await prisma.account.update({
         where: {
-          id: role.id,
+          id: account.id,
         },
-        data: role,
+        data: account,
       });
     }),
 
-  createRole: authProcedure
+  createAccount: authProcedure
     .meta({
-      permission: AuthTree.roleModule.create.code,
+      permission: AuthTree.accountModule.create.code,
     })
-    .input(RoleOptionalDefaultsSchema)
+    .input(AccountOptionalDefaultsSchema)
     .mutation(async ({ input }) => {
-      await prisma.role.create({
+      await prisma.account.create({
         data: input,
       });
     }),
 
-  deleteRole: authProcedure
+  deleteAccount: authProcedure
     .meta({
-      permission: AuthTree.roleModule.delete.code,
+      permission: AuthTree.accountModule.delete.code,
     })
     .input(z.number())
     .mutation(async ({ input }) => {
-      await prisma.role.delete({
+      await prisma.account.delete({
         where: {
           id: input,
         },
@@ -87,4 +87,4 @@ const roleRouter = router({
     }),
 });
 
-export default roleRouter;
+export default accountRouter;

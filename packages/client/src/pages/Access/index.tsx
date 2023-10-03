@@ -1,4 +1,3 @@
-import trpc from '@/trpc';
 import { PageContainer } from '@ant-design/pro-components';
 import { useAccess } from '@umijs/max';
 import { Button } from 'antd';
@@ -14,7 +13,7 @@ const AccessPage: React.FC = () => {
     >
       <Button
         onClick={() => {
-          trpc.testRouter.authTest.query();
+          // trpc.testRouter.authTest.query();
         }}
       >
         点击向没有权限的接口发送请求

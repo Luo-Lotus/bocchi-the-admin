@@ -33,6 +33,38 @@ const AuthTree = {
       name: '删除',
     },
   },
+  accountModule: {
+    code: 9,
+    name: '账户模块',
+    create: {
+      code: 10,
+      name: '创建',
+    },
+    update: {
+      code: 11,
+      name: '更新',
+    },
+    delete: {
+      code: 12,
+      name: '删除',
+    },
+  },
+  userModule: {
+    code: 13,
+    name: '用户模块',
+    create: {
+      code: 14,
+      name: '创建',
+    },
+    update: {
+      code: 15,
+      name: '更新',
+    },
+    delete: {
+      code: 16,
+      name: '删除',
+    },
+  },
 };
 
 export default AuthTree;
