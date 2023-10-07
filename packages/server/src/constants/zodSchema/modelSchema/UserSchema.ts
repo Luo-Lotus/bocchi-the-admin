@@ -12,8 +12,8 @@ export const UserSchema = z.object({
   roleId: z.number().int(),
   createAt: z.coerce.date(),
   updateAt: z.coerce.date(),
-  deleteAt: z.coerce.date().nullable(),
-  // omitted: version: z.number().int(),
+  deleteAt: z.coerce.date().nullish(),
+  version: z.number().int(),
   accountId: z.number().int(),
 })
 
@@ -36,7 +36,7 @@ export const UserOptionalDefaultsSchema = UserSchema.merge(z.object({
   isBanned: z.boolean().optional(),
   createAt: z.coerce.date().optional(),
   updateAt: z.coerce.date().optional(),
-  // omitted: version: z.number().int().optional(),
+  version: z.number().int().optional(),
 }))
 
 export type UserOptionalDefaults = z.infer<typeof UserOptionalDefaultsSchema>

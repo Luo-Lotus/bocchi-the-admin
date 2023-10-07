@@ -54,7 +54,7 @@ const roleRouter = router({
     })
     .input(RolePartialSchema.required({ id: true }))
     .mutation(async ({ input: role }) => {
-      await prisma.role.update({
+      await prisma.role.updateWithVersion({
         where: {
           id: role.id,
         },

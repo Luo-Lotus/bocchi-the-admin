@@ -100,9 +100,9 @@ const userRouter = router({
     .meta({
       permission: AuthTree.userModule.update.code,
     })
-    .input(UserPartialSchema.required({ id: true }))
+    .input(UserPartialSchema.required({ id: true, version: true }))
     .mutation(async ({ input: user }) => {
-      await prisma.user.update({
+      await prisma.user.updateWithVersion({
         where: {
           id: user.id,
         },

@@ -2,6 +2,7 @@ import {
   HomeOutlined,
   KeyOutlined,
   SolutionOutlined,
+  TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 import { MenuDataItem } from '@ant-design/pro-components';
@@ -36,6 +37,12 @@ const router = {
       name: '用户管理',
       path: 'user',
       component: './User',
+      icon: <TeamOutlined />,
+    },
+    {
+      name: '账户管理',
+      path: 'account',
+      component: './Account',
       icon: <UserOutlined />,
     },
   ] as MenuDataItem[] &

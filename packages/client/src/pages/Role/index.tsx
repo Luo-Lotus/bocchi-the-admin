@@ -94,6 +94,7 @@ const TableList: React.FC<unknown> = () => {
                 await updateRole.mutate({
                   ...value,
                   id: record.id,
+                  version: record.version,
                 });
                 actionRef.current?.reload();
                 return true;

@@ -8,12 +8,12 @@ export const AccountSchema = z.object({
   id: z.number().int(),
   account: z.string(),
   password: z.string(),
-  email: z.string().nullable(),
-  phoneNumber: z.string().nullable(),
+  email: z.string().nullish(),
+  phoneNumber: z.string().nullish(),
   createAt: z.coerce.date(),
   updateAt: z.coerce.date(),
-  deleteAt: z.coerce.date().nullable(),
-  // omitted: version: z.number().int(),
+  deleteAt: z.coerce.date().nullish(),
+  version: z.number().int(),
 })
 
 export type Account = z.infer<typeof AccountSchema>
@@ -34,7 +34,7 @@ export const AccountOptionalDefaultsSchema = AccountSchema.merge(z.object({
   id: z.number().int().optional(),
   createAt: z.coerce.date().optional(),
   updateAt: z.coerce.date().optional(),
-  // omitted: version: z.number().int().optional(),
+  version: z.number().int().optional(),
 }))
 
 export type AccountOptionalDefaults = z.infer<typeof AccountOptionalDefaultsSchema>

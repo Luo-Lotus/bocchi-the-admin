@@ -54,7 +54,7 @@ const accountRouter = router({
     })
     .input(AccountPartialSchema.required({ id: true }))
     .mutation(async ({ input: account }) => {
-      await prisma.account.update({
+      await prisma.account.updateWithVersion({
         where: {
           id: account.id,
         },

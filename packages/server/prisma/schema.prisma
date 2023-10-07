@@ -15,6 +15,7 @@ generator zod {
   createInputTypes = false
   createOutputTypes = false
   createPartialTypes = true
+  writeNullishInModelTypes = true
 }
 
 datasource db {
@@ -32,7 +33,7 @@ model Account {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt @default(now())
   deleteAt DateTime?
-  version Int @default(1) /// @zod.custom.omit([model, input])
+  version Int @default(1)
 }
 
 model User {
@@ -45,7 +46,7 @@ model User {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt @default(now())
   deleteAt DateTime?
-  version Int @default(1) /// @zod.custom.omit([model, input])
+  version Int @default(1)
   accountId Int @unique
   account Account  @relation(fields: [accountId], references: [id])
 }
@@ -55,5 +56,5 @@ model Role {
   roleName String
   permissions Int[]
   user User[]
-  version Int @default(1) /// @zod.custom.omit([model, input])
+  version Int @default(1)
 }

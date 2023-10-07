@@ -9,31 +9,23 @@ import {
   ProFormColumnsType,
 } from '@ant-design/pro-components';
 import AuthTree from '@bta/common/AuthTree';
-import {
-  Button,
-  Popconfirm,
-  SelectProps,
-  Space,
-  SwitchProps,
-  message,
-} from 'antd';
+import { Button, Popconfirm, Space, message } from 'antd';
 import _ from 'lodash';
 import React, { useRef } from 'react';
 
 const {
   roleRouter: { queryRoles },
-  accountRouter: { queryAccounts },
-  userRouter: { queryUsers, updateUser, createUser, deleteUser },
+  accountRouter: { queryAccounts, updateAccount, createAccount, deleteAccount },
 } = trpc;
 
-type User = RouterOutput['userRouter']['queryUsers']['data'][number];
+type Account = RouterOutput['accountRouter']['queryAccounts']['data'][number];
 
 type SchemaType<T> = ProColumns<T> & ProFormColumnsType<T>;
 
 const TableList: React.FC<unknown> = () => {
   const actionRef = useRef<ActionType>();
 
-  const schemas: SchemaType<User>[] = [
+  const schemas: SchemaType<Account>[] = [
     {
       title: 'id',
       dataIndex: 'id',
@@ -41,8 +33,8 @@ const TableList: React.FC<unknown> = () => {
       valueType: 'id' as any,
     },
     {
-      title: '用户名',
-      dataIndex: 'username',
+      title: '账号',
+      dataIndex: 'account',
       valueType: 'text',
       formItemProps: {
         rules: [
@@ -54,66 +46,28 @@ const TableList: React.FC<unknown> = () => {
       fixed: 'left',
     },
     {
-      title: '头像Url',
-      dataIndex: 'avatar',
+      title: '密码',
+      dataIndex: 'password',
+      valueType: 'password',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
+      },
+      hideInTable: true,
+      hideInSearch: true,
+    },
+    {
+      title: '邮箱',
+      dataIndex: 'email',
       valueType: 'text',
     },
     {
-      title: '是否禁用',
-      dataIndex: 'isBanned',
-      valueType: 'switch',
-      fieldProps: {
-        checkedChildren: '是',
-        unCheckedChildren: '否',
-      } as SwitchProps,
-    },
-    {
-      title: '角色',
-      dataIndex: 'roleId',
-      valueType: 'select',
-      request: async (params) =>
-        (
-          await queryRoles.query({
-            filter: {
-              roleName: params.keyword || '',
-            },
-            page: {
-              current: 1,
-              pageSize: 100,
-            },
-          })
-        ).data.map((item) => ({
-          label: item.roleName,
-          value: item.id,
-        })),
-      fieldProps: {
-        showSearch: true,
-        placeholder: '搜索角色',
-      } as SelectProps,
-    },
-    {
-      title: '账户',
-      dataIndex: 'accountId',
-      valueType: 'select',
-      request: async (params) =>
-        (
-          await queryAccounts.query({
-            filter: {
-              account: params.keyword || '',
-            },
-            page: {
-              current: 1,
-              pageSize: 100,
-            },
-          })
-        ).data.map((item) => ({
-          label: item.account,
-          value: item.id,
-        })),
-      fieldProps: {
-        showSearch: true,
-        placeholder: '搜索账户',
-      } as SelectProps,
+      title: '手机号',
+      dataIndex: 'phoneNumber',
+      valueType: 'text',
     },
     {
       title: '创建时间',
@@ -141,18 +95,18 @@ const TableList: React.FC<unknown> = () => {
       render: (_, record) => (
         <Space>
           {withAuth(
-            <BetaSchemaForm<User>
+            <BetaSchemaForm<Account>
               layoutType="ModalForm"
               initialValues={record}
               width={400}
-              columns={schemas}
+              columns={schemas.filter((item) => item.dataIndex !== 'password')}
               trigger={
                 <Button type="primary" size="small">
                   编辑
                 </Button>
               }
               onFinish={async (value) => {
-                await updateUser.mutate({
+                await updateAccount.mutate({
                   ...value,
                   id: record.id,
                   version: record.version,
@@ -161,13 +115,13 @@ const TableList: React.FC<unknown> = () => {
                 return true;
               }}
             />,
-            AuthTree.userModule.update.code,
+            AuthTree.accountModule.update.code,
           )}
           {withAuth(
             <Popconfirm
               title="确认删除？"
               onConfirm={async () => {
-                await deleteUser.mutate(record.id);
+                await deleteAccount.mutate(record.id);
                 message.success('删除成功');
                 actionRef.current?.reload();
               }}
@@ -176,7 +130,7 @@ const TableList: React.FC<unknown> = () => {
                 删除
               </Button>
             </Popconfirm>,
-            AuthTree.userModule.delete.code,
+            AuthTree.accountModule.delete.code,
           )}
         </Space>
       ),
@@ -190,7 +144,7 @@ const TableList: React.FC<unknown> = () => {
         title: '用户管理',
       }}
     >
-      <EProTable<User>
+      <EProTable<Account>
         headerTitle="查询表格"
         actionRef={actionRef}
         rowKey="id"
@@ -201,27 +155,28 @@ const TableList: React.FC<unknown> = () => {
         }}
         toolBarRender={() => [
           withAuth(
-            <BetaSchemaForm<User>
+            <BetaSchemaForm<Account & { password: string }>
               layoutType="ModalForm"
               width={400}
+              // @ts-ignore
               columns={schemas}
               trigger={<Button>新增</Button>}
               onFinish={async (value) => {
-                await createUser.mutate(value);
+                await createAccount.mutate(value);
                 actionRef.current?.reload();
                 return true;
               }}
             />,
-            AuthTree.userModule.create.code,
+            AuthTree.accountModule.create.code,
           ),
         ]}
         request={async (params, sorter, filter) => {
-          const result = await queryUsers.query({
+          const result = await queryAccounts.query({
             page: {
               current: params.current!,
               pageSize: params.pageSize!,
             },
-            filter: _.omit(params, ['pageSize', 'current']) as User,
+            filter: _.omit(params, ['pageSize', 'current']) as Account,
           });
           return {
             data: result.data,
