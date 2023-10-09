@@ -31,18 +31,21 @@ const router = {
       name: '角色管理',
       path: 'role',
       component: './Role',
+      authCode: AuthTree.roleModule.code,
       icon: <SolutionOutlined />,
     },
     {
       name: '用户管理',
       path: 'user',
       component: './User',
+      authCode: AuthTree.userModule.code,
       icon: <TeamOutlined />,
     },
     {
       name: '账户管理',
       path: 'account',
       component: './Account',
+      authCode: AuthTree.accountModule.code,
       icon: <UserOutlined />,
     },
   ] as MenuDataItem[] &

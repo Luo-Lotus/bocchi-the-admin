@@ -24,7 +24,11 @@ export default function Page() {
       )}
       // 筛选权限
       postMenuData={(menusData) => {
-        return menusData?.filter((menu) => withAuth(menu, menu.authCode)) || [];
+        const menus =
+          menusData?.filter((menu) => withAuth(menu, menu.authCode)) || [];
+        console.log(menus);
+
+        return menus;
       }}
     >
       <Outlet />

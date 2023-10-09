@@ -27,6 +27,7 @@ export const COLUMN_VALUE_TYPE_MAP: { [key: string]: ProColumns } = {
   image: { width: 100 },
   jsonCode: { width: 100 },
   color: { width: 100 },
+  option: {},
   id: {
     valueType: 'digit',
     width: 100,

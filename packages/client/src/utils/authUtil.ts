@@ -1,3 +1,4 @@
+import AuthTree from '@bta/common/AuthTree';
 import lodash from 'lodash';
 import { AUTHORIZATION_TOKEN } from '../constants/StorageKey';
 import useUser from '../models/useUser';
@@ -22,7 +23,9 @@ export const clearToken = () => {
 export const withAuth = (anyThing: any, authCode?: number) => {
   const currentPermissions = useUser.getState().user?.role.permissions || [];
   if (
-    (authCode && currentPermissions.includes(authCode)) ||
+    (authCode &&
+      (currentPermissions.includes(authCode) ||
+        currentPermissions.includes(AuthTree.code))) ||
     lodash.isNil(authCode)
   ) {
     return anyThing;

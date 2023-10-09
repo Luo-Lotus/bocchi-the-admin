@@ -24,8 +24,8 @@ server.register(fastifyTRPCPlugin, {
   trpcOptions: {
     router: appRouter,
     createContext,
-    onError: (error) => {
-      throw error;
+    onError: (params) => {
+      console.error(params.error.stack);
     },
   } as NodeHTTPHandlerOptions<AppRouter, any, any>, // trpc配置
 });

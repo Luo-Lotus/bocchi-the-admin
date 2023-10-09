@@ -15,7 +15,7 @@ const useUser = create(
     signIn: async (signInParams: SignInParams) => {
       const res = await trpc.userRouter.signIn.mutate(signInParams);
       res?.authorization && setToken(res?.authorization);
-      set({ user: res.user[0] });
+      set({ user: res.user });
       return res;
     },
   })),

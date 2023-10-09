@@ -227,7 +227,6 @@ const TableList: React.FC<unknown> = () => {
         title: '操作',
         dataIndex: 'options',
         valueType: 'option',
-        width: undefined,
         render: (_, record) => (
           <Space.Compact>
             {renderEditForm(record)}
