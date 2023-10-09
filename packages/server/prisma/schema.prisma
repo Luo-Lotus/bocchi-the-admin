@@ -26,10 +26,10 @@ datasource db {
 model Account {
   id Int @id @default(autoincrement())
   account String
-  password String
+  password String /// @zod.string.regex(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/,'密码必须包含数字与字母且大于6位小于15位')
   email String?
   phoneNumber String?
-  user User[]
+  user User?
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt @default(now())
   deleteAt DateTime?

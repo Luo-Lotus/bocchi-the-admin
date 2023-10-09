@@ -31,7 +31,7 @@ const accountRouter = router({
       const filterParams = paramsToFilter(filter || {});
 
       const result = await prisma.$transaction([
-        prisma.account.findMany({
+        prisma.account.findManyWithoutDelete({
           skip: (page.current - 1) * page.pageSize,
           take: page.pageSize,
           orderBy: sort,
@@ -77,11 +77,30 @@ const accountRouter = router({
     .meta({
       permission: AuthTree.accountModule.delete.code,
     })
-    .input(z.number())
+    .input(AccountPartialSchema.required({ id: true, version: true }))
     .mutation(async ({ input }) => {
-      await prisma.account.delete({
+      await prisma.account.softDelete(input);
+    }),
+
+  changePassword: authProcedure
+    .meta({
+      permission: AuthTree.accountModule.changePassword.code,
+    })
+    .input(
+      AccountSchema.pick({
+        password: true,
+        id: true,
+        version: true,
+      }),
+    )
+    .mutation(({ input }) => {
+      prisma.account.updateWithVersion({
         where: {
-          id: input,
+          id: input.id,
+        },
+        data: {
+          password: input.password,
+          version: input.version,
         },
       });
     }),

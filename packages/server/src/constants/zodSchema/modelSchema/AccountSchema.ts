@@ -7,7 +7,7 @@ import { z } from 'zod';
 export const AccountSchema = z.object({
   id: z.number().int(),
   account: z.string(),
-  password: z.string(),
+  password: z.string().regex(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/,'密码必须包含数字与字母且大于6位小于15位'),
   email: z.string().nullish(),
   phoneNumber: z.string().nullish(),
   createAt: z.coerce.date(),

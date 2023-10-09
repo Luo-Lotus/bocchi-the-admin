@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient, PrismaPromise } from '@prisma/client';
 import { throwTRPCBadRequestError } from '../utils/ErrorUtil';
 const prisma = new PrismaClient({}).$extends({
   model: {
@@ -21,6 +21,39 @@ const prisma = new PrismaClient({}).$extends({
           throwTRPCBadRequestError('数据已删除或已更新，请刷新页面后重试');
         }
         return res;
+      },
+
+      findManyWithoutDelete<T>(
+        this: T,
+        args: Prisma.Args<T, 'findMany'>,
+      ): PrismaPromise<Prisma.Result<T, typeof args, 'findMany'>> {
+        const context = Prisma.getExtensionContext(this);
+        return (context as any).findMany({
+          ...args,
+          where: {
+            ...(args as any).where,
+            deleteAt: null,
+          },
+        });
+      },
+
+      softDelete<T, A>(
+        this: T,
+        args: {
+          id: number;
+          version: number;
+        },
+      ): PrismaPromise<Prisma.Result<T, typeof args, 'updateMany'>> {
+        const context = Prisma.getExtensionContext(this);
+        return (context as any).updateWithVersion({
+          where: {
+            id: args.id,
+          },
+          data: {
+            deleteAt: new Date(),
+            version: args.version,
+          },
+        });
       },
     },
   },

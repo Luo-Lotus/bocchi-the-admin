@@ -7,16 +7,13 @@ export function createContext({ req, res }: CreateFastifyContextOptions) {
 }
 export type Context = inferAsyncReturnType<typeof createContext> & {
   user?: inferAsyncReturnType<
-    typeof prisma.user.findUnique<
-      {
-        where: {
-          id: any;
-        };
-        include: {
-          role: true;
-        };
-      },
-      undefined
-    >
+    typeof prisma.user.findUnique<{
+      where: {
+        id: any;
+      };
+      include: {
+        role: true;
+      };
+    }>
   >;
 };

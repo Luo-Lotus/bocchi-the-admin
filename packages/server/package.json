@@ -12,12 +12,12 @@
   "dependencies": {
     "@fastify/cors": "^8.3.0",
     "@fastify/websocket": "^8.1.0",
-    "@prisma/client": "^4.16.1",
+    "@prisma/client": "^5.4.1",
     "@trpc/server": "^10.31.0",
     "dotenv": "^16.3.1",
     "fastify": "^4.18.0",
     "jsonwebtoken": "^9.0.1",
-    "prisma": "^4.16.1",
+    "prisma": "^5.4.1",
     "zod": "^3.22.2"
   },
   "devDependencies": {

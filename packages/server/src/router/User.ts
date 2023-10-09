@@ -56,7 +56,7 @@ const userRouter = router({
       return account
         ? {
             user: account.user,
-            authorization: JWTUtil.encode({ id: account.user[0].id }),
+            authorization: JWTUtil.encode({ id: account.user?.id }),
           }
         : throwTRPCBadRequestError('登陆失败，请检查用户名或密码是否正确');
     }),
@@ -77,15 +77,13 @@ const userRouter = router({
     )
     .query(async ({ input: { sort, filter, page } }) => {
       const filterParams = paramsToFilter(filter || {});
-
       const result = await prisma.$transaction([
-        prisma.user.findMany({
+        prisma.user.findManyWithoutDelete({
           skip: (page.current - 1) * page.pageSize,
           take: page.pageSize,
           orderBy: sort,
           where: filterParams,
         }),
-
         prisma.user.count({
           where: filterParams,
         }),
@@ -125,13 +123,10 @@ const userRouter = router({
     .meta({
       permission: AuthTree.userModule.delete.code,
     })
-    .input(z.number())
+    .input(UserPartialSchema.required({ id: true, version: true }))
     .mutation(async ({ input }) => {
-      await prisma.user.delete({
-        where: {
-          id: input,
-        },
-      });
+      const res = await prisma.user.softDelete(input);
+      console.log(res);
     }),
 });
 

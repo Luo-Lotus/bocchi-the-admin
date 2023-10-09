@@ -167,7 +167,10 @@ const TableList: React.FC<unknown> = () => {
             <Popconfirm
               title="确认删除？"
               onConfirm={async () => {
-                await deleteUser.mutate(record.id);
+                await deleteUser.mutate({
+                  id: record.id,
+                  version: record.version,
+                });
                 message.success('删除成功');
                 actionRef.current?.reload();
               }}

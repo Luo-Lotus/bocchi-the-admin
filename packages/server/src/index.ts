@@ -1,10 +1,11 @@
 import { fastifyTRPCPlugin } from '@trpc/server/adapters/fastify';
 import fastify from 'fastify';
 import { createContext } from './context';
-import { appRouter } from './router';
+import { AppRouter, appRouter } from './router';
 import cors from '@fastify/cors';
 import ws from '@fastify/websocket';
 import dotenv from 'dotenv';
+import { NodeHTTPHandlerOptions } from '@trpc/server/adapters/node-http';
 
 dotenv.config();
 
@@ -20,7 +21,13 @@ server.register(ws); // webSocket
 server.register(fastifyTRPCPlugin, {
   prefix: '/api', // 路由前缀 如 localhost/api/xx/xx
   useWSS: true, // 使用websocket
-  trpcOptions: { router: appRouter, createContext }, // trpc配置
+  trpcOptions: {
+    router: appRouter,
+    createContext,
+    onError: (error) => {
+      throw error;
+    },
+  } as NodeHTTPHandlerOptions<AppRouter, any, any>, // trpc配置
 });
 
 // 启动项目

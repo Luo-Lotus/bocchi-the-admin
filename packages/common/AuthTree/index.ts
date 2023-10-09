@@ -48,6 +48,11 @@ const AuthTree = {
       code: 12,
       name: '删除',
     },
+    /** 可以直接修改所有人的密码！！ 请谨慎赋予权限 */
+    changePassword: {
+      code: 17,
+      name: '修改密码',
+    },
   },
   userModule: {
     code: 13,
