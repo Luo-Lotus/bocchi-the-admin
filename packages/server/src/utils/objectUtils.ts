@@ -15,6 +15,8 @@ export const paramsToFilter = (params: Record<string, any>) => {
         obj[key] = { contains: value };
       } else if (Array.isArray(value)) {
         obj[key] = { hasSome: value };
+      } else if (value?.startAt && value?.endAt) {
+        obj[key] = { gte: value.startAt, lte: value.endAt };
       } else if (typeof value === 'object') {
         /* empty */
       } else {

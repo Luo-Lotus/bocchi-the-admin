@@ -208,12 +208,28 @@ const TableList: React.FC<unknown> = () => {
         dataIndex: 'createAt',
         valueType: 'dateTime',
         hideInForm: true,
+        hideInSearch: true,
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'createAt',
+        valueType: 'dateTimeRange',
+        hideInForm: true,
+        hideInTable: true,
       },
       {
         title: '更新时间',
         dataIndex: 'updateAt',
         valueType: 'dateTime',
         hideInForm: true,
+        hideInSearch: true,
+      },
+      {
+        title: '更新时间',
+        dataIndex: 'updateAt',
+        valueType: 'dateTimeRange',
+        hideInForm: true,
+        hideInTable: true,
       },
       {
         title: '删除时间',

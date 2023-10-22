@@ -27,6 +27,10 @@ export const formatTableColumns = <T extends ProColumns<any, any>>(
     return {
       ...(extendsColumn || defaultEColumn),
       ...item,
+      fieldProps: {
+        ...extendsColumn,
+        ...item.fieldProps,
+      },
       valueType: extendsColumn?.valueType || item.valueType,
     };
   });
@@ -38,8 +42,6 @@ export const commonRequest =
     queryFn: (...arg: any[]) => any,
   ): ComponentProps<typeof ProTable<any>>['request'] =>
   async (params, sorter, filter) => {
-    console.log(sorter);
-
     const result = await queryFn({
       page: {
         current: params.current!,

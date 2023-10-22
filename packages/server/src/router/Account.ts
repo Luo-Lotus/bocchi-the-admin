@@ -11,6 +11,7 @@ import {
 } from '../constants/zodSchema';
 import AuthTree from '@bta/common/AuthTree';
 import { paramsToFilter } from '../utils/objectUtils';
+import { DateRangeSchema } from '../constants/customSchema';
 
 const accountRouter = router({
   queryAccounts: authProcedure
@@ -20,7 +21,12 @@ const accountRouter = router({
     .input(
       z.object({
         sort: z.record(AccountSchema.keyof(), SortOrderSchema).optional(),
-        filter: AccountPartialSchema.optional(),
+        filter: AccountPartialSchema.merge(
+          z.object({
+            createAt: DateRangeSchema,
+            updateAt: DateRangeSchema,
+          }),
+        ).optional(),
         page: z.object({
           current: z.number(),
           pageSize: z.number(),
@@ -29,7 +35,6 @@ const accountRouter = router({
     )
     .query(async ({ input: { sort, filter, page } }) => {
       const filterParams = paramsToFilter(filter || {});
-
       const result = await prisma.$transaction([
         prisma.account.findManyWithoutDelete({
           skip: (page.current - 1) * page.pageSize,

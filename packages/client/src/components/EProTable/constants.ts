@@ -12,7 +12,19 @@ export const COLUMN_VALUE_TYPE_MAP: { [key: string]: ProColumns } = {
   dateYear: { width: 100 },
   dateRange: { width: 100 },
   dateTime: { width: 120 },
-  dateTimeRange: { width: 100 },
+  dateTimeRange: {
+    width: 100,
+    formItemProps: {
+      getValueProps: (value) => ({
+        value: [value?.startAt, value?.endAt],
+      }),
+      getValueFromEvent: (value) =>
+        value && {
+          startAt: value[0],
+          endAt: value[1],
+        },
+    },
+  },
   time: { width: 100 },
   timeRange: { width: 100 },
   index: { width: 100 },
