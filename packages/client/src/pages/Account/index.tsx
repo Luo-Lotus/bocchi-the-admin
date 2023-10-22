@@ -1,4 +1,4 @@
-import EProTable from '@/components/EProTable';
+import EProTable, { commonRequest } from '@/components/EProTable';
 import trpc, { RouterOutput } from '@/trpc';
 import { withAuth } from '@/utils/authUtil';
 import {
@@ -10,9 +10,7 @@ import {
 } from '@ant-design/pro-components';
 import AuthTree from '@bta/common/AuthTree';
 import { Button, Popconfirm, Space, message } from 'antd';
-import _ from 'lodash';
 import React, { useMemo, useRef } from 'react';
-import { ComponentProps } from '../../utils/typeUtils';
 
 const {
   roleRouter: { queryRoles },
@@ -240,25 +238,6 @@ const TableList: React.FC<unknown> = () => {
     [],
   );
 
-  const request: ComponentProps<typeof EProTable<Account>>['request'] = async (
-    params,
-    sorter,
-    filter,
-  ) => {
-    const result = await queryAccounts.query({
-      page: {
-        current: params.current!,
-        pageSize: params.pageSize!,
-      },
-      filter: _.omit(params, ['pageSize', 'current']) as Account,
-    });
-    return {
-      data: result.data,
-      total: result.count,
-      success: !!result,
-    };
-  };
-
   return (
     <PageContainer
       header={{
@@ -275,7 +254,7 @@ const TableList: React.FC<unknown> = () => {
           labelWidth: 50,
         }}
         toolBarRender={() => [renderCreateForm()]}
-        request={request}
+        request={commonRequest(queryAccounts.query)}
         columns={schemas}
         rowSelection={{}}
         tableAlertRender={({ selectedRowKeys }) => (

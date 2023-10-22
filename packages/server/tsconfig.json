@@ -5,6 +5,8 @@
     "esModuleInterop": true,
     "noEmit": false,
     "allowImportingTsExtensions": false,
+    "outDir": "./dist",
+    "declarationDir": "./dist/types",
     "paths": {
       "@server/*": ["./src/*"]
     }

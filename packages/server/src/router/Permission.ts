@@ -1,5 +1,5 @@
 import { router } from '../initTRPC';
-import authProcedure from '../procedure/auth';
+import authProcedure from '../procedures/auth';
 import AuthTree from '@bta/common/AuthTree';
 
 const permissionRouter = router({

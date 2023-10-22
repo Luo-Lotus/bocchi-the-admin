@@ -1,6 +1,7 @@
-import { Prisma, PrismaClient, PrismaPromise } from '@prisma/client';
-import { throwTRPCBadRequestError } from '../utils/ErrorUtil';
-const prisma = new PrismaClient({}).$extends({
+import { Prisma, PrismaPromise } from '@prisma/client';
+import { throwTRPCBadRequestError } from '@server/utils/ErrorUtil';
+
+const baseExtension = Prisma.defineExtension({
   model: {
     $allModels: {
       /** 更新数据的同时校验版本与更新版本，请确保模型带有version字段*/
@@ -59,4 +60,4 @@ const prisma = new PrismaClient({}).$extends({
   },
 });
 
-export default prisma;
+export default baseExtension;

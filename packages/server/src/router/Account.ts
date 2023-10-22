@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { router } from '../initTRPC';
-import authProcedure from '../procedure/auth';
-import prisma from '../repository';
+import authProcedure from '../procedures/auth';
+import prisma from '../repositories';
 import _, { omit } from 'lodash';
 import {
   SortOrderSchema,

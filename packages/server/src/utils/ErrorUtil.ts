@@ -21,6 +21,23 @@ export const throwTRPCUnauthorized = (message: string) => {
   });
 };
 
+export const throwBusinessError = (
+  code: number,
+  message: string,
+  errorData?: any,
+) => {
+  return {
+    name: 'BusinessError',
+    message,
+    stack: message,
+    data: {
+      code,
+      message,
+      errorData,
+    },
+  };
+};
+
 export const handlePrismaError = (error: TRPCError) => {
   if (error.cause instanceof PrismaClientKnownRequestError) {
     return {

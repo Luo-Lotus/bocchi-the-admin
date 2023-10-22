@@ -1,4 +1,4 @@
-import EProTable from '@/components/EProTable';
+import EProTable, { commonRequest } from '@/components/EProTable';
 import trpc, { RouterOutput } from '@/trpc';
 import { withAuth } from '@/utils/authUtil';
 import {
@@ -17,7 +17,6 @@ import {
   SwitchProps,
   message,
 } from 'antd';
-import _ from 'lodash';
 import React, { useRef } from 'react';
 
 const {
@@ -36,6 +35,7 @@ const TableList: React.FC<unknown> = () => {
   const schemas: SchemaType<User>[] = [
     {
       title: 'id',
+      sorter: true,
       dataIndex: 'id',
       hideInForm: true,
       valueType: 'id' as any,
@@ -60,6 +60,7 @@ const TableList: React.FC<unknown> = () => {
     },
     {
       title: '是否禁用',
+      sorter: true,
       dataIndex: 'isBanned',
       valueType: 'switch',
       fieldProps: {
@@ -117,19 +118,15 @@ const TableList: React.FC<unknown> = () => {
     },
     {
       title: '创建时间',
+      sorter: true,
       dataIndex: 'createAt',
       valueType: 'dateTime',
       hideInForm: true,
     },
     {
       title: '更新时间',
+      sorter: true,
       dataIndex: 'updateAt',
-      valueType: 'dateTime',
-      hideInForm: true,
-    },
-    {
-      title: '删除时间',
-      dataIndex: 'deleteAt',
       valueType: 'dateTime',
       hideInForm: true,
     },
@@ -199,7 +196,7 @@ const TableList: React.FC<unknown> = () => {
         rowKey="id"
         size="small"
         search={{
-          span: 8,
+          span: 6,
           labelWidth: 50,
         }}
         toolBarRender={() => [
@@ -218,20 +215,7 @@ const TableList: React.FC<unknown> = () => {
             AuthTree.userModule.create.code,
           ),
         ]}
-        request={async (params, sorter, filter) => {
-          const result = await queryUsers.query({
-            page: {
-              current: params.current!,
-              pageSize: params.pageSize!,
-            },
-            filter: _.omit(params, ['pageSize', 'current']) as User,
-          });
-          return {
-            data: result.data,
-            total: result.count,
-            success: !!result,
-          };
-        }}
+        request={commonRequest(queryUsers.query)}
         columns={schemas}
         rowSelection={{}}
         tableAlertRender={({ selectedRowKeys }) => (

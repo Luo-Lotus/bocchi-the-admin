@@ -1,6 +1,6 @@
 import { inferAsyncReturnType } from '@trpc/server';
 import { CreateFastifyContextOptions } from '@trpc/server/adapters/fastify';
-import prisma from '../repository';
+import prisma from '../repositories';
 
 export function createContext({ req, res }: CreateFastifyContextOptions) {
   return { req, res };

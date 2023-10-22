@@ -1,5 +1,5 @@
 import { middleware } from '@server/initTRPC';
-import prisma from '@server/repository';
+import prisma from '@server/repositories';
 import JWTUtil from '../utils/JWTUtil';
 import { throwTRPCUnauthorized } from '../utils/ErrorUtil';
 

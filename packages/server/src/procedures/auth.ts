@@ -1,6 +1,6 @@
 import { procedure } from '../initTRPC';
-import authMiddleWare from '../middleware/auth';
-import permissionMiddleWare from '../middleware/permission';
+import authMiddleWare from '../middlewares/auth';
+import permissionMiddleWare from '../middlewares/permission';
 import publicProcedure from './public';
 
 const authProcedure = procedure

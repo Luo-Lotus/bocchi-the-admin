@@ -1,5 +1,5 @@
 import { procedure } from '../initTRPC';
-import loggerMiddleware from '../middleware/logger';
+import loggerMiddleware from '../middlewares/logger';
 
 const publicProcedure = procedure.use(loggerMiddleware);
 

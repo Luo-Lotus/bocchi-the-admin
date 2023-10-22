@@ -11,8 +11,8 @@ import {
 } from '@ant-design/pro-components';
 import AuthTree from '@bta/common/AuthTree';
 import { Button, Popconfirm, Space, TreeSelect, message } from 'antd';
-import _ from 'lodash';
 import React, { useRef } from 'react';
+import { commonRequest } from '../../components/EProTable';
 
 const { queryRoles, updateRole, createRole, deleteRole } = trpc.roleRouter;
 
@@ -135,7 +135,7 @@ const TableList: React.FC<unknown> = () => {
         rowKey="id"
         size="small"
         search={{
-          span: 8,
+          span: 6,
           labelWidth: 50,
         }}
         toolBarRender={() => [
@@ -154,20 +154,7 @@ const TableList: React.FC<unknown> = () => {
             AuthTree.roleModule.create.code,
           ),
         ]}
-        request={async (params, sorter, filter) => {
-          const result = await queryRoles.query({
-            page: {
-              current: params.current!,
-              pageSize: params.pageSize!,
-            },
-            filter: _.omit(params, ['pageSize', 'current']) as Role,
-          });
-          return {
-            data: result.data,
-            total: result.count,
-            success: !!result,
-          };
-        }}
+        request={commonRequest(queryRoles.query)}
         columns={schemas}
         rowSelection={{}}
         tableAlertRender={({ selectedRowKeys }) => (

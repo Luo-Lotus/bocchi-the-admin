@@ -1,4 +1,4 @@
-const AuthTree = {
+const AuthTree = Object.freeze({
   name: '全部',
   code: 0,
   permissionModule: {
@@ -70,6 +70,6 @@ const AuthTree = {
       name: '删除',
     },
   },
-};
+});
 
 export default AuthTree;

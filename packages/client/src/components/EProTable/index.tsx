@@ -4,7 +4,8 @@ import {
   ProTable,
   ProTableProps,
 } from '@ant-design/pro-components';
-import { useMemo } from 'react';
+import _ from 'lodash';
+import { ComponentProps, useMemo } from 'react';
 import { COLUMN_VALUE_TYPE_MAP } from './constants';
 
 type EProTableProps<
@@ -26,9 +27,33 @@ export const formatTableColumns = <T extends ProColumns<any, any>>(
     return {
       ...(extendsColumn || defaultEColumn),
       ...item,
+      valueType: extendsColumn?.valueType || item.valueType,
     };
   });
 };
+
+/** 对ProTable的Request属性进行封装 */
+export const commonRequest =
+  (
+    queryFn: (...arg: any[]) => any,
+  ): ComponentProps<typeof ProTable<any>>['request'] =>
+  async (params, sorter, filter) => {
+    console.log(sorter);
+
+    const result = await queryFn({
+      page: {
+        current: params.current!,
+        pageSize: params.pageSize!,
+      },
+      filter: _.omit(params, ['pageSize', 'current']),
+      sort: _.mapValues(sorter, (value) => value?.split('end')[0]),
+    });
+    return {
+      data: result.data,
+      total: result.count,
+      success: !!result,
+    };
+  };
 
 const EProTable = <
   DataType extends Record<string, any>,

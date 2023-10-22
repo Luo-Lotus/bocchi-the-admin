@@ -1,13 +1,14 @@
-import publicProcedure from '@server/procedure/public';
+import publicProcedure from '../procedures/public';
 import { router } from '@server/initTRPC';
 import z from 'zod';
-import prisma from '../repository';
+import prisma from '../repositories';
 import JWTUtil from '../utils/JWTUtil';
 import _ from 'lodash';
 import { exclude, paramsToFilter } from '../utils/objectUtils';
 import { throwTRPCBadRequestError } from '../utils/ErrorUtil';
-import authProcedure from '../procedure/auth';
+import authProcedure from '../procedures/auth';
 import {
+  AccountSchema,
   SortOrderSchema,
   UserOptionalDefaults,
   UserOptionalDefaultsSchema,
@@ -15,51 +16,20 @@ import {
   UserSchema,
 } from '../constants/zodSchema';
 import AuthTree from '@bta/common/AuthTree';
+import userServer from '../services/User';
+import { Prisma } from '@prisma/client';
 
 const userRouter = router({
   signIn: publicProcedure
     .input(
-      z.object({
-        account: z.string().max(15),
-        password: z
-          .string()
-          .regex(
-            /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/,
-            '密码必须包含数字与字母且大于6位小于15位',
-          ),
+      AccountSchema.pick({
+        password: true,
+        account: true,
       }),
     )
-    .mutation(async ({ input }) => {
-      const account = await prisma.account.findFirst({
-        where: {
-          password: input.password,
-          OR: [
-            {
-              account: input.account,
-            },
-            {
-              phoneNumber: input.account,
-            },
-            {
-              email: input.account,
-            },
-          ],
-        },
-        include: {
-          user: {
-            include: {
-              role: true,
-            },
-          },
-        },
-      });
-      return account
-        ? {
-            user: account.user,
-            authorization: JWTUtil.encode({ id: account.user?.id }),
-          }
-        : throwTRPCBadRequestError('登陆失败，请检查用户名或密码是否正确');
-    }),
+    .mutation(async ({ input: { password, account } }) =>
+      userServer.signIn(password, account),
+    ),
   getUserInfoByToken: authProcedure.query(({ ctx }) => ctx.user),
   queryUsers: authProcedure
     .meta({
@@ -123,10 +93,9 @@ const userRouter = router({
     .meta({
       permission: AuthTree.userModule.delete.code,
     })
-    .input(UserPartialSchema.required({ id: true, version: true }))
+    .input(UserSchema.pick({ id: true, version: true }))
     .mutation(async ({ input }) => {
       const res = await prisma.user.softDelete(input);
-      console.log(res);
     }),
 });
 
