@@ -1,4 +1,4 @@
-import { AppRouter } from '@bta/server/dist/types/src/router';
+import { AppRouter } from '@bta/server/src/router';
 import { createTRPCProxyClient, httpBatchLink, loggerLink } from '@trpc/client';
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import _ from 'lodash';
@@ -14,7 +14,7 @@ const client = createTRPCProxyClient<AppRouter>({
     !isProduction && loggerLink(),
     customLink,
     httpBatchLink({
-      url: 'http://192.168.0.109:3000/api',
+      url: 'http://localhost:3000/api',
       // You can pass any HTTP headers you wish here
       async headers() {
         return {
