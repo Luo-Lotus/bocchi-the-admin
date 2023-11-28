@@ -122,6 +122,12 @@ importers:
         specifier: workspace:*
         version: link:../server
 
+  packages/generator:
+    dependencies:
+      '@prisma/generator-helper':
+        specifier: ^5.4.2
+        version: 5.4.2
+
   packages/server:
     dependencies:
       '@fastify/cors':
@@ -152,6 +158,9 @@ importers:
         specifier: ^3.22.2
         version: 3.22.2
     devDependencies:
+      '@bta/generator':
+        specifier: workspace:^
+        version: link:../generator
       '@types/jsonwebtoken':
         specifier: ^9.0.2
         version: 9.0.2
@@ -3482,15 +3491,14 @@ packages:
       - supports-color
     dev: true
 
-  /@prisma/debug@5.2.0:
-    resolution: {integrity: sha512-dOrNOA8B65l3dCp2r3gn5A5dbMXNbEixO3JAaMWiS2q03qMU3/R9oNv86H2c1i3GSwQglH5gjwpkA9olp/+h1A==}
+  /@prisma/debug@5.4.2:
+    resolution: {integrity: sha512-YRRi7beaX/sAQs0WQ/Y0LndfWynyodJKO0qF0Vj/KQ8aynmllpL7Hahdm4MVEy6eDPeoX7FWu/otkHRGKWmKSQ==}
     dependencies:
-      '@types/debug': 4.1.8
+      '@types/debug': 4.1.9
       debug: 4.3.4
       strip-ansi: 6.0.1
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /@prisma/engines-version@4.16.0-66.b20ead4d3ab9e78ac112966e242ded703f4a052c:
     resolution: {integrity: sha512-tMWAF/qF00fbUH1HB4Yjmz6bjh7fzkb7Y3NRoUfMlHu6V+O45MGvqwYxqwBjn1BIUXkl3r04W351D4qdJjrgvA==}
@@ -3545,16 +3553,15 @@ packages:
       - supports-color
     dev: true
 
-  /@prisma/generator-helper@5.2.0:
-    resolution: {integrity: sha512-jju+nGe8IgwDhs412sx6PSk5efkuoBqHOJSqbRBb9Y/fMfeDRGLVdwia8Hj+PKmd/YXrqFgBd4NDeFxeCcVVqw==}
+  /@prisma/generator-helper@5.4.2:
+    resolution: {integrity: sha512-UC2W3ZUs87jbdEOCmsQfCyGeuLA0oosAKgS+0vTCoZWnKUPGvMNxMqNPL08rpXTc1vwUFvl09R76ZVC3Zm7PHw==}
     dependencies:
-      '@prisma/debug': 5.2.0
-      '@types/cross-spawn': 6.0.2
+      '@prisma/debug': 5.4.2
+      '@types/cross-spawn': 6.0.3
       cross-spawn: 7.0.3
       kleur: 4.1.5
     transitivePeerDependencies:
       - supports-color
-    dev: true
 
   /@prisma/get-platform@4.16.2:
     resolution: {integrity: sha512-fnDey1/iSefHJRMB+w243BhWENf+paRouPMdCqIVqu8dYkR1NqhldblsSUC4Zr2sKS7Ta2sK4OLdt9IH+PZTfw==}
@@ -4018,11 +4025,21 @@ packages:
       '@types/node': 20.5.9
     dev: true
 
+  /@types/cross-spawn@6.0.3:
+    resolution: {integrity: sha512-BDAkU7WHHRHnvBf5z89lcvACsvkz/n7Tv+HyD/uW76O29HoH1Tk/W6iQrepaZVbisvlEek4ygwT8IW7ow9XLAA==}
+    dependencies:
+      '@types/node': 20.5.9
+
   /@types/debug@4.1.8:
     resolution: {integrity: sha512-/vPO1EPOs306Cvhwv7KfVfYvOJqA/S/AXjaHQiJboCZzcNDb+TIJFN9/2C9DZ//ijSKWioNyUxD792QmDJ+HKQ==}
     dependencies:
       '@types/ms': 0.7.31
     dev: true
+
+  /@types/debug@4.1.9:
+    resolution: {integrity: sha512-8Hz50m2eoS56ldRlepxSBa6PWEVCtzUo/92HgLc2qTMnotJNIm7xP+UZhyWoYsyOdd5dxZ+NZLb24rsKyFs2ow==}
+    dependencies:
+      '@types/ms': 0.7.31
 
   /@types/eslint-scope@3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
@@ -4122,7 +4139,6 @@ packages:
 
   /@types/ms@0.7.31:
     resolution: {integrity: sha512-iiUgKzV9AuaEkZqkOLDIvlQiL6ltuZd9tGcW3gwpnX8JbuiuhFlEGmmFXEXkN50Cvq7Os88IY2v0dkDqXYWVgA==}
-    dev: true
 
   /@types/node@12.20.55:
     resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
@@ -9151,7 +9167,6 @@ packages:
   /kleur@4.1.5:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
-    dev: true
 
   /known-css-properties@0.25.0:
     resolution: {integrity: sha512-b0/9J1O9Jcyik1GC6KC42hJ41jKwdO/Mq8Mdo5sYN+IuRTXs2YFHZC3kZSx6ueusqa95x3wLYe/ytKjbAfGixA==}
@@ -14400,7 +14415,7 @@ packages:
     resolution: {integrity: sha512-JgPN32d/Wm6/E61oHXek2jDT6VxBpKVPmLom7585SmdCyj+xb+OAg8O3G0BLU+gWNiC+Eyt3blo1S/8W9sIaxA==}
     hasBin: true
     dependencies:
-      '@prisma/generator-helper': 5.2.0
+      '@prisma/generator-helper': 5.4.2
       code-block-writer: 12.0.0
       lodash: 4.17.21
       zod: 3.22.2

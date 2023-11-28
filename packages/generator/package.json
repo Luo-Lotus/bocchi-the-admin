@@ -1,0 +1,18 @@
+{
+  "name": "@bta/generator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "generator": "./index.js"
+  },
+  "scripts": {
+    "build": "tsc index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/generator-helper": "^5.4.2"
+  }
+}

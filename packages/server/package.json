@@ -21,6 +21,7 @@
     "zod": "^3.22.2"
   },
   "devDependencies": {
+    "@bta/generator": "workspace:^",
     "@types/jsonwebtoken": "^9.0.2",
     "prisma-trpc-generator": "^1.4.1",
     "tsx": "^3.12.7",
