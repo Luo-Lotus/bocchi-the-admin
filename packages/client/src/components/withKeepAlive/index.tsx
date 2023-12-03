@@ -6,7 +6,7 @@ const withKeepAlive = (Component: FC) => {
   return () => {
     const routeData = useRouteData();
     const { pathname } = useLocation();
-    const { pushTab, setActiveKey, isKeyInTabItems, tabItems } = useTabs();
+    const { pushTab, setActiveKey } = useTabs();
 
     // 页面初次加载时渲染tab标签
     useEffect(() => {

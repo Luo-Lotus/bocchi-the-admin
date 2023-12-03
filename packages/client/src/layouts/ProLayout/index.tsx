@@ -5,7 +5,11 @@ import useUser from '@/models/useUser';
 import router from '@/router';
 import { clearToken, withAuth } from '@/utils/authUtil';
 import { LogoutOutlined } from '@ant-design/icons';
-import { PageContainer, ProLayout } from '@ant-design/pro-components';
+import {
+  MenuDataItem,
+  PageContainer,
+  ProLayout,
+} from '@ant-design/pro-components';
 import { Link, Outlet, useLocation, useNavigate } from '@umijs/max';
 import { AvatarProps, Dropdown, Spin, Tabs } from 'antd';
 import { ReactNode } from 'react';
@@ -42,6 +46,47 @@ const Page = () => {
     </Dropdown>
   );
 
+  const renderTabs = () => (
+    <Tabs
+      className="pl-40px pt-20px"
+      size="small"
+      type="editable-card"
+      hideAdd
+      items={tabItems}
+      activeKey={activeKey}
+      onEdit={(targetKey, action) => {
+        if (action === 'remove') {
+          closeTab(targetKey as string);
+          // 清除keepAlive缓存
+          drop(targetKey as string);
+        }
+      }}
+      onChange={(key) => {
+        const item = tabItems.find((item) => item.key === key);
+        if (item) {
+          navigate(item.path);
+          setActiveKey(item.key);
+        }
+      }}
+    />
+  );
+
+  const renderMenuItem = (menuDataItem: MenuDataItem, dom: ReactNode) => (
+    <Link
+      to={menuDataItem.path as string}
+      onClick={() => {
+        pushTab({
+          path: menuDataItem.path!,
+          key: menuDataItem.key!,
+          label: menuDataItem.name!,
+        });
+        setActiveKey(menuDataItem.key!);
+      }}
+    >
+      {dom}
+    </Link>
+  );
+
   return (
     <ProLayout
       title={'Bocchi The Admin!'}
@@ -49,28 +94,11 @@ const Page = () => {
       location={{ pathname }}
       logo={logo}
       // 点击后跳转到对应页面
-      menuItemRender={(menuDataItem, dom) => (
-        <Link
-          to={menuDataItem.path as string}
-          onClick={() => {
-            pushTab({
-              path: menuDataItem.path!,
-              key: menuDataItem.key!,
-              label: menuDataItem.name!,
-            });
-            setActiveKey(menuDataItem.key!);
-          }}
-        >
-          {dom}
-        </Link>
-      )}
+      menuItemRender={renderMenuItem}
       // 筛选权限
-      postMenuData={(menusData) => {
-        const menus =
-          menusData?.filter((menu) => withAuth(menu, menu.authCode)) || [];
-
-        return menus;
-      }}
+      postMenuData={(menusData) =>
+        menusData?.filter((menu) => withAuth(menu, menu.authCode)) || []
+      }
       layout="mix"
       avatarProps={{
         title: '后藤独',
@@ -79,28 +107,7 @@ const Page = () => {
         render: renderUserMenu,
       }}
     >
-      <Tabs
-        className="pl-40px pt-20px"
-        size="small"
-        type="editable-card"
-        hideAdd
-        items={tabItems}
-        activeKey={activeKey}
-        onEdit={(targetKey, action) => {
-          if (action === 'remove') {
-            closeTab(targetKey as string);
-            // 清除keepAlive缓存
-            drop(targetKey as string);
-          }
-        }}
-        onChange={(key) => {
-          const item = tabItems.find((item) => item.key === key);
-          if (item) {
-            navigate(item.path);
-            setActiveKey(item.key);
-          }
-        }}
-      />
+      {renderTabs()}
       <PageContainer
         header={{
           title: null,
