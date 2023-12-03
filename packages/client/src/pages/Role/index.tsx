@@ -4,7 +4,6 @@ import { withAuth } from '@/utils/authUtil';
 import {
   ActionType,
   BetaSchemaForm,
-  PageContainer,
   ProColumns,
   ProFormColumnsType,
   ProTable,
@@ -13,6 +12,7 @@ import AuthTree from '@bta/common/AuthTree';
 import { Button, Popconfirm, Space, TreeSelect, message } from 'antd';
 import React, { useRef } from 'react';
 import { commonRequest } from '../../components/EProTable';
+import withKeepAlive from '../../components/withKeepAlive';
 
 const { queryRoles, updateRole, createRole, deleteRole } = trpc.roleRouter;
 
@@ -124,48 +124,42 @@ const TableList: React.FC<unknown> = () => {
   ];
 
   return (
-    <PageContainer
-      header={{
-        title: '角色管理',
+    <ProTable<Role>
+      headerTitle="查询表格"
+      actionRef={actionRef}
+      rowKey="id"
+      size="small"
+      search={{
+        span: 6,
+        labelWidth: 50,
       }}
-    >
-      <ProTable<Role>
-        headerTitle="查询表格"
-        actionRef={actionRef}
-        rowKey="id"
-        size="small"
-        search={{
-          span: 6,
-          labelWidth: 50,
-        }}
-        toolBarRender={() => [
-          withAuth(
-            <BetaSchemaForm<Role>
-              layoutType="ModalForm"
-              width={400}
-              columns={schemas}
-              trigger={<Button>新增</Button>}
-              onFinish={async (value) => {
-                await createRole.mutate(value);
-                actionRef.current?.reload();
-                return true;
-              }}
-            />,
-            AuthTree.roleModule.create.code,
-          ),
-        ]}
-        request={commonRequest(queryRoles.query)}
-        columns={schemas}
-        rowSelection={{}}
-        tableAlertRender={({ selectedRowKeys }) => (
-          <div>
-            已选择
-            <a className="font-medium">{selectedRowKeys.length}</a>项
-          </div>
-        )}
-      />
-    </PageContainer>
+      toolBarRender={() => [
+        withAuth(
+          <BetaSchemaForm<Role>
+            layoutType="ModalForm"
+            width={400}
+            columns={schemas}
+            trigger={<Button>新增</Button>}
+            onFinish={async (value) => {
+              await createRole.mutate(value);
+              actionRef.current?.reload();
+              return true;
+            }}
+          />,
+          AuthTree.roleModule.create.code,
+        ),
+      ]}
+      request={commonRequest(queryRoles.query)}
+      columns={schemas}
+      rowSelection={{}}
+      tableAlertRender={({ selectedRowKeys }) => (
+        <div>
+          已选择
+          <a className="font-medium">{selectedRowKeys.length}</a>项
+        </div>
+      )}
+    />
   );
 };
 
-export default TableList;
+export default withKeepAlive(TableList);

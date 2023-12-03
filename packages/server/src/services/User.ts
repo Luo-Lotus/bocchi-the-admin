@@ -29,7 +29,7 @@ const userServer = {
         },
       },
     });
-    return account
+    return loginAccount
       ? {
           user: loginAccount?.user,
           authorization: JWTUtil.encode({ id: loginAccount?.user?.id }),

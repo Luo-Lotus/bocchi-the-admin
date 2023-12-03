@@ -17,7 +17,10 @@ export default defineConfig({
   initialState: {},
   request: {},
   // layout: {
-  plugins: [require.resolve('@umijs/plugins/dist/unocss')],
+  plugins: [
+    require.resolve('@umijs/plugins/dist/unocss'),
+    'umi-plugin-keep-alive',
+  ],
   unocss: {
     // 检测 className 的文件范围，若项目不包含 src 目录，可使用 `pages/**/*.tsx`
     watch: ['src/**/*.tsx'],

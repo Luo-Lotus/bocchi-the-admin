@@ -4,13 +4,13 @@ import { withAuth } from '@/utils/authUtil';
 import {
   ActionType,
   BetaSchemaForm,
-  PageContainer,
   ProColumns,
   ProFormColumnsType,
 } from '@ant-design/pro-components';
 import AuthTree from '@bta/common/AuthTree';
 import { Button, Popconfirm, Space, message } from 'antd';
 import React, { useMemo, useRef } from 'react';
+import withKeepAlive from '../../components/withKeepAlive';
 
 const {
   roleRouter: { queryRoles },
@@ -255,33 +255,27 @@ const TableList: React.FC<unknown> = () => {
   );
 
   return (
-    <PageContainer
-      header={{
-        title: '用户管理',
+    <EProTable<Account>
+      headerTitle="查询表格"
+      actionRef={actionRef}
+      rowKey="id"
+      size="small"
+      search={{
+        span: 6,
+        labelWidth: 50,
       }}
-    >
-      <EProTable<Account>
-        headerTitle="查询表格"
-        actionRef={actionRef}
-        rowKey="id"
-        size="small"
-        search={{
-          span: 6,
-          labelWidth: 50,
-        }}
-        toolBarRender={() => [renderCreateForm()]}
-        request={commonRequest(queryAccounts.query)}
-        columns={schemas}
-        rowSelection={{}}
-        tableAlertRender={({ selectedRowKeys }) => (
-          <div>
-            已选择
-            <a className="font-medium">{selectedRowKeys.length}</a>项
-          </div>
-        )}
-      />
-    </PageContainer>
+      toolBarRender={() => [renderCreateForm()]}
+      request={commonRequest(queryAccounts.query)}
+      columns={schemas}
+      rowSelection={{}}
+      tableAlertRender={({ selectedRowKeys }) => (
+        <div>
+          已选择
+          <a className="font-medium">{selectedRowKeys.length}</a>项
+        </div>
+      )}
+    />
   );
 };
 
-export default TableList;
+export default withKeepAlive(TableList);

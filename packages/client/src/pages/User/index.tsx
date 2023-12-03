@@ -4,7 +4,6 @@ import { withAuth } from '@/utils/authUtil';
 import {
   ActionType,
   BetaSchemaForm,
-  PageContainer,
   ProColumns,
   ProFormColumnsType,
 } from '@ant-design/pro-components';
@@ -18,6 +17,7 @@ import {
   message,
 } from 'antd';
 import React, { useRef } from 'react';
+import withKeepAlive from '../../components/withKeepAlive';
 
 const {
   roleRouter: { queryRoles },
@@ -185,48 +185,42 @@ const TableList: React.FC<unknown> = () => {
   ];
 
   return (
-    <PageContainer
-      header={{
-        title: '用户管理',
+    <EProTable<User>
+      headerTitle="查询表格"
+      actionRef={actionRef}
+      rowKey="id"
+      size="small"
+      search={{
+        span: 6,
+        labelWidth: 50,
       }}
-    >
-      <EProTable<User>
-        headerTitle="查询表格"
-        actionRef={actionRef}
-        rowKey="id"
-        size="small"
-        search={{
-          span: 6,
-          labelWidth: 50,
-        }}
-        toolBarRender={() => [
-          withAuth(
-            <BetaSchemaForm<User>
-              layoutType="ModalForm"
-              width={400}
-              columns={schemas}
-              trigger={<Button>新增</Button>}
-              onFinish={async (value) => {
-                await createUser.mutate(value);
-                actionRef.current?.reload();
-                return true;
-              }}
-            />,
-            AuthTree.userModule.create.code,
-          ),
-        ]}
-        request={commonRequest(queryUsers.query)}
-        columns={schemas}
-        rowSelection={{}}
-        tableAlertRender={({ selectedRowKeys }) => (
-          <div>
-            已选择
-            <a className="font-medium">{selectedRowKeys.length}</a>项
-          </div>
-        )}
-      />
-    </PageContainer>
+      toolBarRender={() => [
+        withAuth(
+          <BetaSchemaForm<User>
+            layoutType="ModalForm"
+            width={400}
+            columns={schemas}
+            trigger={<Button>新增</Button>}
+            onFinish={async (value) => {
+              await createUser.mutate(value);
+              actionRef.current?.reload();
+              return true;
+            }}
+          />,
+          AuthTree.userModule.create.code,
+        ),
+      ]}
+      request={commonRequest(queryUsers.query)}
+      columns={schemas}
+      rowSelection={{}}
+      tableAlertRender={({ selectedRowKeys }) => (
+        <div>
+          已选择
+          <a className="font-medium">{selectedRowKeys.length}</a>项
+        </div>
+      )}
+    />
   );
 };
 
-export default TableList;
+export default withKeepAlive(TableList);

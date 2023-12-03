@@ -26,7 +26,7 @@ export const throwBusinessError = (
   message: string,
   errorData?: any,
 ) => {
-  return {
+  throw {
     name: 'BusinessError',
     message,
     stack: message,

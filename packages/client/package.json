@@ -18,6 +18,8 @@
     "@umijs/max": "^4.0.79",
     "@unocss/cli": "^0.55.7",
     "antd": "^5.8.6",
+    "react-activation": "^0.12.4",
+    "umi-plugin-keep-alive": "0.0.1-beta.35",
     "unocss": "^0.55.7",
     "zustand": "^4.4.1"
   },
