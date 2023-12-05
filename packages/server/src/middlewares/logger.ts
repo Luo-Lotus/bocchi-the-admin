@@ -9,17 +9,18 @@ const loggerMiddleware = middleware(async (opts) => {
   res.headers({
     [TRACE_ID_HEADER_NAME]: traceId,
   });
+  opts.ctx.traceId = traceId;
 
   const start = new Date();
   const result = await opts.next();
   const durationMs = Date.now() - start.valueOf();
   const loggerString = `${start.toLocaleString()} durationMs=${durationMs} path=${
     opts.path
-  } ip=${req.socket.remoteAddress} id=${traceId}`;
-
+  } ip=${req.socket.remoteAddress} traceId=${traceId}`;
+  req;
   result.ok
-    ? console.log('[SUCCESS]', loggerString)
-    : console.error('[FAILED]', loggerString);
+    ? console.log('\x1B[32m%s\x1B[0m', '[SUCCESS]', loggerString)
+    : console.error('\x1B[31m%s\x1B[0m', '[FAILED]', loggerString);
 
   return result;
 });

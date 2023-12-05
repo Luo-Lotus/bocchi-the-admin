@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const JWT_SECRET = process.env.JWT_SECRET || '';
+const JWT_EXPIRED = '7d';
 
 if (!JWT_SECRET) {
   console.warn(
@@ -13,8 +14,8 @@ if (!JWT_SECRET) {
 
 const encode = (payload: any) => {
   return jwt.sign(payload, JWT_SECRET, {
-    expiresIn: '7d',
-  }); 
+    expiresIn: JWT_EXPIRED,
+  });
 };
 
 const verify = (token: string) =>
