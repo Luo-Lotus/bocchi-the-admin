@@ -2,9 +2,9 @@
   "name": "@bta/generator",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "bin": {
-    "generator": "./index.js"
+    "generator": "./index.ts"
   },
   "scripts": {
     "build": "tsc index.ts"
@@ -13,6 +13,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@prisma/generator-helper": "^5.4.2"
+    "@prisma/generator-helper": "^5.4.2",
+    "@types/node": "^20.10.3",
+    "prettier": "^3.0.3",
+    "tsx": "^3.12.7"
   }
 }
