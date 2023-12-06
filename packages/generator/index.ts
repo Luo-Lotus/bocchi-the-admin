@@ -7,6 +7,7 @@ import type {
 } from '@prisma/generator-helper';
 import { generateZodTemplate } from './src/zodTemplate';
 import { writeFiles } from './src/utils';
+import config from './config';
 
 export function onManifest(): GeneratorManifest {
   return {
@@ -25,7 +26,15 @@ export async function onGenerate(options: GeneratorOptions) {
 }
 
 const handleZodTemplate = (options: GeneratorOptions) => {
-  writeFiles(options.dmmf.datamodel.models.map(generateZodTemplate));
+  const templates = options.dmmf.datamodel.models.map(generateZodTemplate);
+  templates.push({
+    modelName: '',
+    fileName: 'index.ts',
+    template: `${templates
+      .map((item) => `export * from './${item.modelName}Schema'`)
+      .join(';')}`,
+  });
+  writeFiles(templates, config.zod.outputPath);
 };
 generatorHandler({
   onManifest: onManifest,

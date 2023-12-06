@@ -2,7 +2,27 @@ import type { DMMF } from '@prisma/generator-helper';
 import { FieldTypes, PrismaDataTypeToZodMap } from './constants';
 import { filterHasDefaultFields, filterModelFields } from './utils';
 
-const generateField = (field: DMMF.Field, isPartial = false) => {
+const REGEX = /@zod=(.*)/;
+
+const generateField = (
+  field: DMMF.Field,
+  isPartial = false,
+  useDocumention = true,
+) => {
+  if (useDocumention) {
+    const customZods = field.documentation?.split('\n') || [];
+
+    // 如果存在 @zod= 开头的注释文档，直接应用注释中的zod表达式
+    for (const item of customZods) {
+      const result = item.match(REGEX)?.[1];
+      if (result) {
+        return `${field.name}: ${result}${
+          field.isRequired ? '' : '.nullish()'
+        }${isPartial ? '.optional()' : ''}`;
+      }
+    }
+  }
+
   return `${field.name}:  ${PrismaDataTypeToZodMap[field.type as FieldTypes]}${
     field.isList ? '.array()' : ''
   }${field.isRequired ? '' : '.nullish()'}${isPartial ? '.optional()' : ''}`;
@@ -18,8 +38,8 @@ export const generateZodTemplate = (model: DMMF.Model) => {
     import { z } from 'zod';
 
     /** ORIGIN ${modelUpperCaseName} SCHEMA */
-    export const ${modelLowerCaseName}OriginSchema = z.object({
-      ${fields.map((item) => generateField(item))}
+    export const ${modelName}OriginSchema = z.object({
+      ${fields.map((item) => generateField(item, false, false))}
     });
 
     /** ${modelUpperCaseName} SCHEMA */
@@ -43,6 +63,7 @@ export const generateZodTemplate = (model: DMMF.Model) => {
     export default ${modelName}Schema;
   `;
   return {
+    modelName: modelName,
     fileName: `${modelName}Schema.ts`,
     template,
   };

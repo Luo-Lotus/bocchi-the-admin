@@ -5,3 +5,4 @@ export { RoleScalarFieldEnumSchema } from './RoleScalarFieldEnumSchema';
 export { SortOrderSchema } from './SortOrderSchema';
 export { QueryModeSchema } from './QueryModeSchema';
 export { NullsOrderSchema } from './NullsOrderSchema';
+export { DateRangeSchema } from './DateRangeSchema';

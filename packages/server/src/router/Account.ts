@@ -8,10 +8,12 @@ import {
   AccountOptionalDefaultsSchema,
   AccountPartialSchema,
   AccountSchema,
+  AccountOriginSchema,
 } from '../constants/zodSchema';
 import AuthTree from '@bta/common/AuthTree';
 import { paramsToFilter } from '../utils/objectUtils';
-import { DateRangeSchema } from '../constants/customSchema';
+import { DateRangeSchema } from '../constants/zodSchema';
+import { createQueryRouterInputSchema } from '../utils/zodUtil';
 
 const accountRouter = router({
   queryAccounts: authProcedure
@@ -19,19 +21,14 @@ const accountRouter = router({
       permission: AuthTree.accountModule.code,
     })
     .input(
-      z.object({
-        sort: z.record(AccountSchema.keyof(), SortOrderSchema).optional(),
-        filter: AccountPartialSchema.merge(
+      createQueryRouterInputSchema(
+        AccountOriginSchema.partial().merge(
           z.object({
             createAt: DateRangeSchema,
             updateAt: DateRangeSchema,
           }),
-        ).optional(),
-        page: z.object({
-          current: z.number(),
-          pageSize: z.number(),
-        }),
-      }),
+        ),
+      ),
     )
     .query(async ({ input: { sort, filter, page } }) => {
       const filterParams = paramsToFilter(filter || {});

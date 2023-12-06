@@ -1,3 +1,3 @@
-export * from './AccountSchema';
-export * from './UserSchema';
-export * from './RoleSchema';
+export * from "./AccountSchema";
+export * from "./UserSchema";
+export * from "./RoleSchema";

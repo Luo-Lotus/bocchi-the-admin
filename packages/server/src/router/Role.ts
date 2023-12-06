@@ -8,25 +8,18 @@ import {
   RolePartialSchema,
   RoleSchema,
   SortOrderSchema,
+  RoleOriginSchema,
 } from '../constants/zodSchema';
 import AuthTree from '@bta/common/AuthTree';
 import { paramsToFilter } from '../utils/objectUtils';
+import { createQueryRouterInputSchema } from '../utils/zodUtil';
 
 const roleRouter = router({
   queryRoles: authProcedure
     .meta({
       permission: AuthTree.roleModule.code,
     })
-    .input(
-      z.object({
-        sort: z.record(RoleSchema.keyof(), SortOrderSchema).optional(),
-        filter: RolePartialSchema.optional(),
-        page: z.object({
-          current: z.number(),
-          pageSize: z.number(),
-        }),
-      }),
-    )
+    .input(createQueryRouterInputSchema(RoleOriginSchema.partial()))
     .query(async ({ input: { sort, filter, page } }) => {
       const filterParams = paramsToFilter(filter || {});
 

@@ -12,8 +12,11 @@ export const filterModelFields = (fields: DMMF.Field[]) => {
   );
 };
 
-export const writeFiles = (list: { fileName: string; template: string }[]) => {
-  const savePath = path.join(__dirname, 'output');
+export const writeFiles = (
+  list: { fileName: string; template: string }[],
+  relationPath = '',
+) => {
+  const savePath = path.join(__dirname, '../../', relationPath);
   if (!fs.existsSync(savePath)) {
     fs.mkdirSync(savePath);
   }
@@ -26,7 +29,6 @@ export const writeFiles = (list: { fileName: string; template: string }[]) => {
         .catch((e) => {
           console.log(e);
         })) || '';
-    console.log(formattedTemplate);
 
     fs.writeFile(
       path.join(savePath, item.fileName),

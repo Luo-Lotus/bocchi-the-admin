@@ -12,12 +12,14 @@ import {
   SortOrderSchema,
   UserOptionalDefaults,
   UserOptionalDefaultsSchema,
+  UserOriginSchema,
   UserPartialSchema,
   UserSchema,
 } from '../constants/zodSchema';
 import AuthTree from '@bta/common/AuthTree';
 import userServer from '../services/User';
 import { Prisma } from '@prisma/client';
+import { createQueryRouterInputSchema } from '../utils/zodUtil';
 
 const userRouter = router({
   signIn: publicProcedure
@@ -35,16 +37,7 @@ const userRouter = router({
     .meta({
       permission: AuthTree.userModule.code,
     })
-    .input(
-      z.object({
-        sort: z.record(UserSchema.keyof(), SortOrderSchema).optional(),
-        filter: UserPartialSchema.optional(),
-        page: z.object({
-          current: z.number(),
-          pageSize: z.number(),
-        }),
-      }),
-    )
+    .input(createQueryRouterInputSchema(UserOriginSchema.partial()))
     .query(async ({ input: { sort, filter, page } }) => {
       const filterParams = paramsToFilter(filter || {});
       const result = await prisma.$transaction([
