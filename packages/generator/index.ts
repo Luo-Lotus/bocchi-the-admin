@@ -5,9 +5,14 @@ import type {
   GeneratorManifest,
   GeneratorOptions,
 } from '@prisma/generator-helper';
-import { generateZodTemplate } from './src/zodTemplate';
+import {
+  createIndex,
+  generateZodEnumSchema,
+  generateZodModelSchema,
+} from './src/zodTemplate';
 import { writeFiles } from './src/utils';
 import config from './config';
+import { generateTRPCTemplate } from './src/trpcTemplate';
 
 export function onManifest(): GeneratorManifest {
   return {
@@ -20,22 +25,27 @@ export async function onGenerate(options: GeneratorOptions) {
   try {
     console.log(JSON.stringify(options.dmmf.datamodel, null, 2));
     handleZodTemplate(options);
+    handleTRPCTemplate(options);
   } catch (e) {
     console.error(e);
   }
 }
 
 const handleZodTemplate = (options: GeneratorOptions) => {
-  const templates = options.dmmf.datamodel.models.map(generateZodTemplate);
-  templates.push({
-    modelName: '',
-    fileName: 'index.ts',
-    template: `${templates
-      .map((item) => `export * from './${item.modelName}Schema'`)
-      .join(';')}`,
-  });
+  const enumSchema = options.dmmf.datamodel.enums.map(generateZodEnumSchema);
+  const modelSchema = options.dmmf.datamodel.models.map(generateZodModelSchema);
+
+  const templates = modelSchema.concat(enumSchema);
+  templates.push(createIndex(templates));
   writeFiles(templates, config.zod.outputPath);
 };
+
+const handleTRPCTemplate = (options: GeneratorOptions) => {
+  const routers = options.dmmf.datamodel.models.map(generateTRPCTemplate);
+
+  writeFiles(routers, config.trpc.outputPath);
+};
+
 generatorHandler({
   onManifest: onManifest,
   onGenerate: onGenerate,

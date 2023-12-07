@@ -4,7 +4,6 @@ import authProcedure from '../procedures/auth';
 import prisma from '../repositories';
 import _, { omit } from 'lodash';
 import {
-  SortOrderSchema,
   AccountOptionalDefaultsSchema,
   AccountPartialSchema,
   AccountSchema,
@@ -12,7 +11,7 @@ import {
 } from '../constants/zodSchema';
 import AuthTree from '@bta/common/AuthTree';
 import { paramsToFilter } from '../utils/objectUtils';
-import { DateRangeSchema } from '../constants/zodSchema';
+import { DateRangeSchema } from '../constants/zodSchema/inputTypeSchemas';
 import { createQueryRouterInputSchema } from '../utils/zodUtil';
 
 const accountRouter = router({

@@ -2,14 +2,18 @@ import type { DMMF } from '@prisma/generator-helper';
 import path from 'path';
 import fs from 'fs';
 import prettier from 'prettier';
-export const filterHasDefaultFields = (fields: DMMF.Field[]) => {
+export const getHasDefaultFields = (fields: DMMF.Field[]) => {
   return fields.filter((item) => item.hasDefaultValue);
 };
 
-export const filterModelFields = (fields: DMMF.Field[]) => {
+export const getNotModelFields = (fields: DMMF.Field[]) => {
   return fields.filter(
     (item) => !(item.kind === 'object' && !!item.relationName),
   );
+};
+
+export const getEnumFields = (fields: DMMF.Field[]) => {
+  return fields.filter((item) => item.kind === 'enum');
 };
 
 export const writeFiles = (
@@ -18,7 +22,7 @@ export const writeFiles = (
 ) => {
   const savePath = path.join(__dirname, '../../', relationPath);
   if (!fs.existsSync(savePath)) {
-    fs.mkdirSync(savePath);
+    fs.mkdirSync(savePath, { recursive: true });
   }
   list.forEach(async (item) => {
     const formattedTemplate =
@@ -34,7 +38,7 @@ export const writeFiles = (
       path.join(savePath, item.fileName),
       formattedTemplate,
       (err) => {
-        console.log(err);
+        err && console.log(err);
       },
     );
   });

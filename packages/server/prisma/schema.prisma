@@ -9,18 +9,18 @@ generator generator {
   provider = "generator"
 }
 
-generator zod {
-  provider = "zod-prisma-types"
-  output = "../src/constants/zodSchema"
-  useMultipleFiles = true
-  writeBarrelFiles = true
-  createOptionalDefaultValuesTypes = true
-  createModelTypes = true
-  createInputTypes = false
-  createOutputTypes = false
-  createPartialTypes = true
-  writeNullishInModelTypes = true
-}
+// generator zod {
+//   provider = "zod-prisma-types"
+//   output = "../src/constants/zodSchema"
+//   useMultipleFiles = true
+//   writeBarrelFiles = true
+//   createOptionalDefaultValuesTypes = true
+//   createModelTypes = true
+//   createInputTypes = false
+//   createOutputTypes = false
+//   createPartialTypes = true
+//   writeNullishInModelTypes = true
+// }
 
 datasource db {
   provider = "postgresql"
@@ -62,4 +62,5 @@ model Role {
   permissions Int[]
   user User[]
   version Int @default(1)
+
 }

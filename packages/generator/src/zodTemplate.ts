@@ -1,10 +1,11 @@
-import type { DMMF } from '@prisma/generator-helper';
+import { DMMF } from '@prisma/generator-helper';
 import { FieldTypes, PrismaDataTypeToZodMap } from './constants';
-import { filterHasDefaultFields, filterModelFields } from './utils';
+import { getEnumFields, getHasDefaultFields, getNotModelFields } from './utils';
 
 const REGEX = /@zod=(.*)/;
 
-const generateField = (
+/** 创建Model field */
+const createField = (
   field: DMMF.Field,
   isPartial = false,
   useDocumention = true,
@@ -23,28 +24,79 @@ const generateField = (
     }
   }
 
+  if (field.kind == 'enum') {
+    return `${field.name}: ${field.type + 'Enum'}${
+      field.isRequired ? '' : '.nullish()'
+    }${isPartial ? '.optional()' : ''}`;
+  }
+
   return `${field.name}:  ${PrismaDataTypeToZodMap[field.type as FieldTypes]}${
     field.isList ? '.array()' : ''
   }${field.isRequired ? '' : '.nullish()'}${isPartial ? '.optional()' : ''}`;
 };
+/** 创建Index文件 */
+export const createIndex = (
+  templates: {
+    modelName: string;
+  }[],
+) => {
+  return {
+    modelName: '',
+    fileName: 'index.ts',
+    template: `${templates
+      .map((item) => `export * from './${item.modelName}'`)
+      .join(';')}`,
+  };
+};
 
-export const generateZodTemplate = (model: DMMF.Model) => {
+/** 创建枚举的zod文件定义 */
+export const generateZodEnumSchema = (_enum: DMMF.DatamodelEnum) => {
+  const name = `${_enum.name}Enum`;
+  const template = `
+  import { z } from 'zod';
+
+  export const ${name} = z.enum([${_enum.values
+    .map((item) => `"${item.name}"`)
+    .join(',')}]);
+
+  export type ${name}Type = \`\${z.infer<typeof ${name}>}\`
+
+  export default ${name};
+
+  `;
+  return {
+    modelName: name,
+    fileName: name + '.ts',
+    template,
+  };
+};
+
+/** 创建model的zod文件定义 */
+export const generateZodModelSchema = (model: DMMF.Model) => {
   const modelName = model.name;
   const modelLowerCaseName = modelName.toLowerCase();
   const modelUpperCaseName = modelName.toUpperCase();
-  const fields = filterModelFields(model.fields);
-  const hasDefaultFields = filterHasDefaultFields(fields);
+  const fields = getNotModelFields(model.fields);
+  const hasDefaultFields = getHasDefaultFields(fields);
+  const enumFields = getEnumFields(fields);
   const template = `
     import { z } from 'zod';
+    ${
+      enumFields.length
+        ? `import {${enumFields
+            .map((item) => `${item.type}Enum`)
+            .join(',')}} from './'`
+        : ''
+    }
 
     /** ORIGIN ${modelUpperCaseName} SCHEMA */
     export const ${modelName}OriginSchema = z.object({
-      ${fields.map((item) => generateField(item, false, false))}
+      ${fields.map((item) => createField(item, false, false))}
     });
 
     /** ${modelUpperCaseName} SCHEMA */
     export const ${modelName}Schema = z.object({
-      ${fields.map((item) => generateField(item))}
+      ${fields.map((item) => createField(item))}
     });
     export type ${modelName} = z.infer<typeof ${modelName}Schema>;
 
@@ -55,7 +107,7 @@ export const generateZodTemplate = (model: DMMF.Model) => {
 
     /** DEFAULT PARTIAL ${modelUpperCaseName} SCHEMA */
     export const ${modelName}OptionalDefaultsSchema = ${modelName}Schema.merge(z.object({
-      ${hasDefaultFields.map((item) => generateField(item, true))}
+      ${hasDefaultFields.map((item) => createField(item, true))}
     }));
 
     export type ${modelName}OptionalDefaults = z.infer<typeof ${modelName}OptionalDefaultsSchema>;
@@ -63,7 +115,7 @@ export const generateZodTemplate = (model: DMMF.Model) => {
     export default ${modelName}Schema;
   `;
   return {
-    modelName: modelName,
+    modelName: modelName + 'Schema',
     fileName: `${modelName}Schema.ts`,
     template,
   };

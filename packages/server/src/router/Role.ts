@@ -6,13 +6,11 @@ import _ from 'lodash';
 import {
   RoleOptionalDefaultsSchema,
   RolePartialSchema,
-  RoleSchema,
-  SortOrderSchema,
   RoleOriginSchema,
-} from '../constants/zodSchema';
+} from '@server/constants/zodSchema';
 import AuthTree from '@bta/common/AuthTree';
-import { paramsToFilter } from '../utils/objectUtils';
-import { createQueryRouterInputSchema } from '../utils/zodUtil';
+import { paramsToFilter } from '@server/utils/objectUtils';
+import { createQueryRouterInputSchema } from '@server/utils/zodUtil';
 
 const roleRouter = router({
   queryRoles: authProcedure
