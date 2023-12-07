@@ -30,8 +30,13 @@ const useTabs = create(
           tabItems: newTabItems,
         });
         if (key === activeKey) {
-          const newPath = newTabItems[0]?.path;
-          history.push(newPath);
+          const newTab = newTabItems[0];
+          if (newTab) {
+            history.push(newTab.path);
+            set({
+              activeKey: newTab.key,
+            });
+          }
         }
       },
       clearTabs: () => {
