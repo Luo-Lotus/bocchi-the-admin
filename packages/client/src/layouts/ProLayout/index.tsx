@@ -14,6 +14,7 @@ import { Link, Outlet, useLocation, useNavigate } from '@umijs/max';
 import { AvatarProps, Dropdown, Spin, Tabs } from 'antd';
 import { ReactNode } from 'react';
 import { useAliveController, withAliveScope } from 'react-activation';
+import './index.less';
 
 const Page = () => {
   const { pathname } = useLocation();
@@ -48,7 +49,7 @@ const Page = () => {
 
   const renderTabs = () => (
     <Tabs
-      className="pl-40px pt-20px"
+      className="pl-20px pt-10px"
       size="small"
       type="editable-card"
       hideAdd
@@ -89,6 +90,7 @@ const Page = () => {
 
   return (
     <ProLayout
+      className="page-container"
       title={'Bocchi The Admin!'}
       route={router}
       location={{ pathname }}
@@ -108,6 +110,7 @@ const Page = () => {
       }}
     >
       {renderTabs()}
+
       <PageContainer
         header={{
           title: null,

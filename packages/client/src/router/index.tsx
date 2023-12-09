@@ -40,6 +40,13 @@ const router = {
       component: './User',
       authCode: AuthTree.userModule.code,
       icon: <TeamOutlined />,
+      // routes: [
+      //   {
+      //     name: '用户管理',
+      //     path: ':id',
+      //     component: './User',
+      //   },
+      // ],
     },
     {
       name: '账户管理',

@@ -35,9 +35,19 @@ export default defineConfig({
       component: './Login',
     },
     {
+      name: '无权限',
+      path: '/403',
+      component: './NoPermission',
+    },
+    {
       path: '/',
       component: '@/layouts/ProLayout/index',
       routes: router.routes,
+    },
+    {
+      name: '未找到页面',
+      path: '*',
+      component: './NotFound',
     },
   ],
   npmClient: 'pnpm',
