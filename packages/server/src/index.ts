@@ -6,6 +6,7 @@ import cors from '@fastify/cors';
 import ws from '@fastify/websocket';
 import dotenv from 'dotenv';
 import { NodeHTTPHandlerOptions } from '@trpc/server/adapters/node-http';
+import { renderTrpcPanel } from 'trpc-panel';
 
 dotenv.config();
 
@@ -28,6 +29,16 @@ server.register(fastifyTRPCPlugin, {
       console.error(params.error.stack);
     },
   } as NodeHTTPHandlerOptions<AppRouter, any, any>, // trpc配置
+});
+
+// 接口文档
+server.get('/api/docs', (_, res) => {
+  return res.header('content-type', 'text/html').send(
+    renderTrpcPanel(appRouter, {
+      url: 'http://localhost:3000/api', // 文档中发送请求的url
+      transformer: 'superjson',
+    }),
+  );
 });
 
 // 启动项目

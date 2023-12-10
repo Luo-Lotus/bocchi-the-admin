@@ -2,7 +2,7 @@ import { z } from "zod";
 
 /** ORIGIN ACCOUNT SCHEMA */
 export const AccountOriginSchema = z.object({
-  id: z.number().int(),
+  id: z.coerce.number().int(),
   account: z.string(),
   password: z.string(),
   email: z.string().nullish(),
@@ -10,12 +10,12 @@ export const AccountOriginSchema = z.object({
   createAt: z.coerce.date(),
   updateAt: z.coerce.date(),
   deleteAt: z.coerce.date().nullish(),
-  version: z.number().int(),
+  version: z.coerce.number().int(),
 });
 
 /** ACCOUNT SCHEMA */
 export const AccountSchema = z.object({
-  id: z.number().int(),
+  id: z.coerce.number().int(),
   account: z.string(),
   password: z
     .string()
@@ -28,7 +28,7 @@ export const AccountSchema = z.object({
   createAt: z.coerce.date(),
   updateAt: z.coerce.date(),
   deleteAt: z.coerce.date().nullish(),
-  version: z.number().int(),
+  version: z.coerce.number().int(),
 });
 export type Account = z.infer<typeof AccountSchema>;
 
@@ -40,10 +40,10 @@ export type AccountPartial = z.infer<typeof AccountPartialSchema>;
 /** DEFAULT PARTIAL ACCOUNT SCHEMA */
 export const AccountOptionalDefaultsSchema = AccountSchema.merge(
   z.object({
-    id: z.number().int().optional(),
+    id: z.coerce.number().int().optional(),
     createAt: z.coerce.date().optional(),
     updateAt: z.coerce.date().optional(),
-    version: z.number().int().optional(),
+    version: z.coerce.number().int().optional(),
   }),
 );
 

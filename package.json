@@ -23,6 +23,7 @@
     "@trpc/react-query": "^10.31.0",
     "@trpc/server": "^10.31.0",
     "lodash": "^4.17.21",
+    "query-string": "^8.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",

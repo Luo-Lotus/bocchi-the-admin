@@ -1,8 +1,10 @@
 import { DMMF } from '@prisma/generator-helper';
+import { getDateFields } from './utils';
 
 export const generateTRPCTemplate = (model: DMMF.Model) => {
   const modelName = model.name;
   const modelLowerCaseName = modelName.toLowerCase();
+  const dateFields = getDateFields(model.fields);
 
   const template = `
   import { z } from 'zod';
@@ -24,7 +26,17 @@ export const generateTRPCTemplate = (model: DMMF.Model) => {
       .meta({
         permission: AuthTree.${modelLowerCaseName}Module.code,
       })
-      .input(createQueryRouterInputSchema(${modelName}OriginSchema.partial()))
+      .input(createQueryRouterInputSchema(${modelName}OriginSchema.partial()${
+        dateFields.length
+          ? `.merge(
+        z.object({
+          ${dateFields
+            .map((field) => `${field.name}: DateRangeSchema`)
+            .join(',')}
+        }),
+      )`
+          : ''
+      }))
       .query(async ({ input: { sort, filter, page } }) => {
         const filterParams = paramsToFilter(filter || {});
   

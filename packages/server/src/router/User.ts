@@ -9,6 +9,7 @@ import { throwTRPCBadRequestError } from '../utils/ErrorUtil';
 import authProcedure from '../procedures/auth';
 import {
   AccountSchema,
+  DateRangeSchema,
   SortOrderSchema,
   UserOptionalDefaults,
   UserOptionalDefaultsSchema,
@@ -37,7 +38,16 @@ const userRouter = router({
     .meta({
       permission: AuthTree.userModule.code,
     })
-    .input(createQueryRouterInputSchema(UserOriginSchema.partial()))
+    .input(
+      createQueryRouterInputSchema(
+        UserOriginSchema.partial().merge(
+          z.object({
+            createAt: DateRangeSchema,
+            updateAt: DateRangeSchema,
+          }),
+        ),
+      ),
+    )
     .query(async ({ input: { sort, filter, page } }) => {
       const filterParams = paramsToFilter(filter || {});
       const result = await prisma.$transaction([

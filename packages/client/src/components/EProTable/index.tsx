@@ -1,6 +1,7 @@
 import {
   ParamsType,
   ProColumns,
+  ProFormColumnsType,
   ProTable,
   ProTableProps,
 } from '@ant-design/pro-components';
@@ -17,6 +18,8 @@ type EProTableProps<
     valueType?: any & ProColumns<DataType, ValueType>['valueType'];
   })[];
 };
+
+export type SchemaType<T> = ProColumns<T> & ProFormColumnsType<T>;
 
 export const formatTableColumns = <T extends ProColumns<any, any>>(
   columns: T[],

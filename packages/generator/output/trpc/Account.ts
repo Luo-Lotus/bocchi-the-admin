@@ -17,7 +17,17 @@ const accountRouter = router({
     .meta({
       permission: AuthTree.accountModule.code,
     })
-    .input(createQueryRouterInputSchema(AccountOriginSchema.partial()))
+    .input(
+      createQueryRouterInputSchema(
+        AccountOriginSchema.partial().merge(
+          z.object({
+            createAt: DateRangeSchema,
+            updateAt: DateRangeSchema,
+            deleteAt: DateRangeSchema,
+          }),
+        ),
+      ),
+    )
     .query(async ({ input: { sort, filter, page } }) => {
       const filterParams = paramsToFilter(filter || {});
 

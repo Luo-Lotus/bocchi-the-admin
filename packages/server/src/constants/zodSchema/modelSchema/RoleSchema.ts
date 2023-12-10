@@ -2,18 +2,18 @@ import { z } from "zod";
 
 /** ORIGIN ROLE SCHEMA */
 export const RoleOriginSchema = z.object({
-  id: z.number().int(),
+  id: z.coerce.number().int(),
   roleName: z.string(),
-  permissions: z.number().int().array(),
-  version: z.number().int(),
+  permissions: z.coerce.number().int().array(),
+  version: z.coerce.number().int(),
 });
 
 /** ROLE SCHEMA */
 export const RoleSchema = z.object({
-  id: z.number().int(),
+  id: z.coerce.number().int(),
   roleName: z.string(),
-  permissions: z.number().int().array(),
-  version: z.number().int(),
+  permissions: z.coerce.number().int().array(),
+  version: z.coerce.number().int(),
 });
 export type Role = z.infer<typeof RoleSchema>;
 
@@ -25,8 +25,8 @@ export type RolePartial = z.infer<typeof RolePartialSchema>;
 /** DEFAULT PARTIAL ROLE SCHEMA */
 export const RoleOptionalDefaultsSchema = RoleSchema.merge(
   z.object({
-    id: z.number().int().optional(),
-    version: z.number().int().optional(),
+    id: z.coerce.number().int().optional(),
+    version: z.coerce.number().int().optional(),
   }),
 );
 

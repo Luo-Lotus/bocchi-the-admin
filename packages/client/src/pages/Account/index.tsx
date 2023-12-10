@@ -1,4 +1,6 @@
 import EProTable, { commonRequest } from '@/components/EProTable';
+import withKeepAlive from '@/components/withKeepAlive';
+import useQueryToForm from '@/hooks/useQueryToForm';
 import trpc, { RouterOutput } from '@/trpc';
 import { withAuth } from '@/utils/authUtil';
 import {
@@ -8,12 +10,10 @@ import {
   ProFormColumnsType,
 } from '@ant-design/pro-components';
 import AuthTree from '@bta/common/AuthTree';
-import { Button, Popconfirm, Space, message } from 'antd';
-import React, { useMemo, useRef } from 'react';
-import withKeepAlive from '../../components/withKeepAlive';
+import { Button, FormInstance, Popconfirm, Space, message } from 'antd';
+import React, { useRef } from 'react';
 
 const {
-  roleRouter: { queryRoles },
   accountRouter: {
     changePassword,
     queryAccounts,
@@ -27,8 +27,10 @@ type Account = RouterOutput['accountRouter']['queryAccounts']['data'][number];
 
 type SchemaType<T> = ProColumns<T> & ProFormColumnsType<T>;
 
-const TableList: React.FC<unknown> = () => {
+const AccountList: React.FC = () => {
   const actionRef = useRef<ActionType>();
+  const formRef = useRef<FormInstance>();
+  useQueryToForm(formRef);
 
   const renderChangePasswordForm = (record: Account) =>
     withAuth(
@@ -101,7 +103,7 @@ const TableList: React.FC<unknown> = () => {
         layoutType="ModalForm"
         initialValues={record}
         width={400}
-        columns={schemas.filter((item) => item.dataIndex !== 'password')}
+        columns={getSchemas().filter((item) => item.dataIndex !== 'password')}
         trigger={
           <Button type="link" size="small">
             编辑
@@ -126,7 +128,7 @@ const TableList: React.FC<unknown> = () => {
         layoutType="ModalForm"
         width={400}
         // @ts-ignore
-        columns={schemas}
+        columns={getSchemas()}
         trigger={<Button>新增</Button>}
         onFinish={async (value) => {
           await createAccount.mutate(value);
@@ -158,106 +160,104 @@ const TableList: React.FC<unknown> = () => {
       AuthTree.accountModule.delete.code,
     );
 
-  const schemas: SchemaType<Account>[] = useMemo(
-    () => [
-      {
-        title: 'id',
-        dataIndex: 'id',
-        hideInForm: true,
-        valueType: 'id' as any,
+  const getSchemas = (): SchemaType<Account>[] => [
+    {
+      title: 'id',
+      dataIndex: 'id',
+      hideInForm: true,
+      valueType: 'id' as any,
+    },
+    {
+      title: '账号',
+      dataIndex: 'account',
+      valueType: 'text',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
       },
-      {
-        title: '账号',
-        dataIndex: 'account',
-        valueType: 'text',
-        formItemProps: {
-          rules: [
-            {
-              required: true,
-            },
-          ],
-        },
-        fixed: 'left',
+      fixed: 'left',
+    },
+    {
+      title: '密码',
+      dataIndex: 'password',
+      valueType: 'password',
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
       },
-      {
-        title: '密码',
-        dataIndex: 'password',
-        valueType: 'password',
-        formItemProps: {
-          rules: [
-            {
-              required: true,
-            },
-          ],
-        },
-        hideInTable: true,
-        hideInSearch: true,
-      },
-      {
-        title: '邮箱',
-        dataIndex: 'email',
-        valueType: 'text',
-      },
-      {
-        title: '手机号',
-        dataIndex: 'phoneNumber',
-        valueType: 'text',
-      },
-      {
-        title: '创建时间',
-        dataIndex: 'createAt',
-        valueType: 'dateTime',
-        hideInForm: true,
-        hideInSearch: true,
-      },
-      {
-        title: '创建时间',
-        dataIndex: 'createAt',
-        valueType: 'dateTimeRange',
-        hideInForm: true,
-        hideInTable: true,
-      },
-      {
-        title: '更新时间',
-        dataIndex: 'updateAt',
-        valueType: 'dateTime',
-        hideInForm: true,
-        hideInSearch: true,
-      },
-      {
-        title: '更新时间',
-        dataIndex: 'updateAt',
-        valueType: 'dateTimeRange',
-        hideInForm: true,
-        hideInTable: true,
-      },
-      {
-        title: '删除时间',
-        dataIndex: 'deleteAt',
-        valueType: 'dateTime',
-        hideInForm: true,
-      },
-      {
-        title: '操作',
-        dataIndex: 'options',
-        valueType: 'option',
-        render: (_, record) => (
-          <Space.Compact>
-            {renderEditForm(record)}
-            {renderDeleteButton(record)}
-            {renderChangePasswordForm(record)}
-          </Space.Compact>
-        ),
-        fixed: 'right',
-      },
-    ],
-    [],
-  );
+      hideInTable: true,
+      hideInSearch: true,
+    },
+    {
+      title: '邮箱',
+      dataIndex: 'email',
+      valueType: 'text',
+    },
+    {
+      title: '手机号',
+      dataIndex: 'phoneNumber',
+      valueType: 'text',
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createAt',
+      valueType: 'dateTime',
+      hideInForm: true,
+      hideInSearch: true,
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createAt',
+      valueType: 'dateTimeRange',
+      hideInForm: true,
+      hideInTable: true,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateAt',
+      valueType: 'dateTime',
+      hideInForm: true,
+      hideInSearch: true,
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateAt',
+      valueType: 'dateTimeRange',
+      hideInForm: true,
+      hideInTable: true,
+    },
+    {
+      title: '删除时间',
+      dataIndex: 'deleteAt',
+      valueType: 'dateTime',
+      hideInForm: true,
+    },
+    {
+      title: '操作',
+      dataIndex: 'options',
+      valueType: 'option',
+      render: (_, record) => (
+        <Space.Compact>
+          {renderEditForm(record)}
+          {renderDeleteButton(record)}
+          {renderChangePasswordForm(record)}
+        </Space.Compact>
+      ),
+      fixed: 'right',
+    },
+  ];
 
   return (
     <EProTable<Account>
       headerTitle="查询表格"
       actionRef={actionRef}
+      formRef={formRef}
       rowKey="id"
       size="small"
       search={{
@@ -266,16 +266,10 @@ const TableList: React.FC<unknown> = () => {
       }}
       toolBarRender={() => [renderCreateForm()]}
       request={commonRequest(queryAccounts.query)}
-      columns={schemas}
+      columns={getSchemas()}
       rowSelection={{}}
-      tableAlertRender={({ selectedRowKeys }) => (
-        <div>
-          已选择
-          <a className="font-medium">{selectedRowKeys.length}</a>项
-        </div>
-      )}
     />
   );
 };
 
-export default withKeepAlive(TableList);
+export default withKeepAlive(AccountList);

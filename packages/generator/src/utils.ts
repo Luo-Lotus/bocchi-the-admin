@@ -2,6 +2,11 @@ import type { DMMF } from '@prisma/generator-helper';
 import path from 'path';
 import fs from 'fs';
 import prettier from 'prettier';
+
+export const getDateFields = (fields: DMMF.Field[]) => {
+  return fields.filter((item) => item.type === 'DateTime');
+};
+
 export const getHasDefaultFields = (fields: DMMF.Field[]) => {
   return fields.filter((item) => item.hasDefaultValue);
 };
