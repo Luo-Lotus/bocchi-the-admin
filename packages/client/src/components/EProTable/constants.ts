@@ -1,4 +1,5 @@
 import { ProColumns } from '@ant-design/pro-components';
+import { SwitchProps } from 'antd';
 
 export const COLUMN_VALUE_TYPE_MAP: { [key: string]: ProColumns } = {
   default: { width: 100 },
@@ -12,6 +13,7 @@ export const COLUMN_VALUE_TYPE_MAP: { [key: string]: ProColumns } = {
   dateYear: { width: 100 },
   dateRange: { width: 100 },
   dateTime: { width: 120 },
+
   dateTimeRange: {
     width: 100,
     formItemProps: {
@@ -43,5 +45,13 @@ export const COLUMN_VALUE_TYPE_MAP: { [key: string]: ProColumns } = {
   id: {
     valueType: 'digit',
     width: 100,
+  },
+  boolean: {
+    width: 100,
+    valueType: 'switch',
+    fieldProps: {
+      checkedChildren: '是',
+      unCheckedChildren: '否',
+    } as SwitchProps,
   },
 };

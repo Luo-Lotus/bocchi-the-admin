@@ -1,7 +1,12 @@
-import EProTable, { SchemaType, commonRequest } from '@/components/EProTable';
+import EProTable, {
+  SchemaType,
+  commonRequest,
+  formatTableColumns,
+} from '@/components/EProTable';
 import trpc, { RouterOutput } from '@/trpc';
 import { withAuth } from '@/utils/authUtil';
 import { ActionType, BetaSchemaForm } from '@ant-design/pro-components';
+
 import AuthTree from '@bta/common/AuthTree';
 import { Link } from '@umijs/max';
 import {
@@ -10,9 +15,9 @@ import {
   Popconfirm,
   SelectProps,
   Space,
-  SwitchProps,
   message,
 } from 'antd';
+import _ from 'lodash';
 import React, { useRef } from 'react';
 import withKeepAlive from '../../components/withKeepAlive';
 import useQueryToForm from '../../hooks/useQueryToForm';
@@ -30,140 +35,145 @@ const UserList: React.FC = () => {
   const formRef = useRef<FormInstance>();
   useQueryToForm(formRef);
 
-  const getSchema = (): SchemaType<User>[] => [
-    {
-      title: 'id',
-      sorter: true,
-      dataIndex: 'id',
-      hideInForm: true,
-      valueType: 'id' as any,
-    },
-    {
-      title: '用户名',
-      dataIndex: 'username',
-      valueType: 'text',
-      formItemProps: {
-        rules: [
-          {
-            required: true,
+  const getSchema = (): SchemaType<User>[] =>
+    formatTableColumns([
+      {
+        title: 'id',
+        sorter: true,
+        dataIndex: 'id',
+        hideInForm: true,
+        valueType: 'id' as any,
+      },
+      {
+        title: '用户名',
+        dataIndex: 'username',
+        valueType: 'text',
+        formItemProps: {
+          rules: [
+            {
+              required: true,
+            },
+          ],
+        },
+        fixed: 'left',
+      },
+      {
+        title: '头像Url',
+        dataIndex: 'avatar',
+        valueType: 'text',
+      },
+      {
+        title: '是否禁用',
+        sorter: true,
+        dataIndex: 'isBanned',
+        valueType: 'boolean' as any,
+      },
+      {
+        title: '角色',
+        dataIndex: 'roleId',
+        valueType: 'select',
+        request: queryRolesRequest,
+        render(text, record, index, action) {
+          return <Link to={`/role?id=${record.roleId}`}>{text}</Link>;
+        },
+        fieldProps: {
+          showSearch: true,
+          placeholder: '搜索角色',
+        } as SelectProps,
+      },
+      {
+        title: '账户',
+        dataIndex: 'accountId',
+        valueType: 'select',
+        request: queryAccountsRequest,
+        render(text, record, index, action) {
+          return <Link to={`/account?id=${record.accountId}`}>{text}</Link>;
+        },
+        fieldProps: {
+          showSearch: true,
+          placeholder: '搜索账户',
+        } as SelectProps,
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'createAt',
+        valueType: 'dateTimeRange',
+        hideInForm: true,
+        hideInTable: true,
+      },
+      {
+        title: '更新时间',
+        dataIndex: 'updateAt',
+        valueType: 'dateTime',
+        hideInForm: true,
+        hideInSearch: true,
+      },
+      {
+        title: '更新时间',
+        dataIndex: 'updateAt',
+        valueType: 'dateTimeRange',
+        hideInForm: true,
+        hideInTable: true,
+      },
+      {
+        title: '删除时间',
+        dataIndex: 'deleteAt',
+        valueType: 'dateTime',
+        hideInForm: true,
+      },
+      {
+        title: '操作',
+        dataIndex: 'options',
+        valueType: 'option',
+        render: (_, record) => (
+          <Space>
+            {renderEditForm(record)}
+            {renderDeleteForm(record)}
+          </Space>
+        ),
+        fixed: 'right',
+      },
+    ]);
+
+  const queryRolesRequest = _.debounce(
+    async (params: any) =>
+      (
+        await queryRoles.query({
+          filter: {
+            roleName: params.keyword || '',
           },
-        ],
-      },
-      fixed: 'left',
-    },
-    {
-      title: '头像Url',
-      dataIndex: 'avatar',
-      valueType: 'text',
-    },
-    {
-      title: '是否禁用',
-      sorter: true,
-      dataIndex: 'isBanned',
-      valueType: 'switch',
-      fieldProps: {
-        checkedChildren: '是',
-        unCheckedChildren: '否',
-      } as SwitchProps,
-    },
-    {
-      title: '角色',
-      dataIndex: 'roleId',
-      valueType: 'select',
-      request: queryRolesRequest,
-      render(text, record, index, action) {
-        return <Link to={`/role?id=${record.roleId}`}>{text}</Link>;
-      },
-      fieldProps: {
-        showSearch: true,
-        placeholder: '搜索角色',
-      } as SelectProps,
-    },
-    {
-      title: '账户',
-      dataIndex: 'accountId',
-      valueType: 'select',
-      request: queryAccountsRequest,
-      render(text, record, index, action) {
-        return <Link to={`/account?id=${record.roleId}`}>{text}</Link>;
-      },
-      fieldProps: {
-        showSearch: true,
-        placeholder: '搜索账户',
-      } as SelectProps,
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createAt',
-      valueType: 'dateTimeRange',
-      hideInForm: true,
-      hideInTable: true,
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updateAt',
-      valueType: 'dateTime',
-      hideInForm: true,
-      hideInSearch: true,
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updateAt',
-      valueType: 'dateTimeRange',
-      hideInForm: true,
-      hideInTable: true,
-    },
-    {
-      title: '删除时间',
-      dataIndex: 'deleteAt',
-      valueType: 'dateTime',
-      hideInForm: true,
-    },
-    {
-      title: '操作',
-      dataIndex: 'options',
-      valueType: 'option',
-      render: (_, record) => (
-        <Space>
-          {renderEditForm(record)}
-          {renderDeleteForm(record)}
-        </Space>
-      ),
-      fixed: 'right',
-    },
-  ];
+          page: {
+            current: 1,
+            pageSize: 100,
+          },
+        })
+      ).data.map((item) => ({
+        label: item.roleName,
+        value: item.id,
+      })),
+    1000,
+    { leading: true },
+  );
 
-  const queryRolesRequest = async (params: any) =>
-    (
-      await queryRoles.query({
-        filter: {
-          roleName: params.keyword || '',
-        },
-        page: {
-          current: 1,
-          pageSize: 100,
-        },
-      })
-    ).data.map((item) => ({
-      label: item.roleName,
-      value: item.id,
-    }));
-
-  const queryAccountsRequest = async (params: any) =>
-    (
-      await queryAccounts.query({
-        filter: {
-          account: params.keyword || '',
-        },
-        page: {
-          current: 1,
-          pageSize: 100,
-        },
-      })
-    ).data.map((item) => ({
-      label: item.account,
-      value: item.id,
-    }));
+  const queryAccountsRequest = _.debounce(
+    async (params: any) =>
+      (
+        await queryAccounts.query({
+          filter: {
+            account: params.keyword || '',
+          },
+          page: {
+            current: 1,
+            pageSize: 100,
+          },
+        })
+      ).data.map((item) => ({
+        label: item.account,
+        value: item.id,
+      })),
+    1000,
+    { leading: true },
+  );
 
   const renderCreateForm = () =>
     withAuth(

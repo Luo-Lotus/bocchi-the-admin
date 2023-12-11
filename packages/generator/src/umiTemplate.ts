@@ -1,177 +1,61 @@
-export const generateUmiTemplate = () => {
-  const template = `
-  import EProTable, { commonRequest } from '@/components/EProTable';
-  import withKeepAlive from '@/components/withKeepAlive';
-  import useQueryToForm from '@/hooks/useQueryToForm';
+import { DMMF } from '@prisma/generator-helper';
+import { getRelationModelFields } from './utils';
+
+export const generateUmiTemplate = (model: DMMF.Model) => {
+  const fields = model.fields;
+  const modelFields = getRelationModelFields(fields);
+  const name = model.name;
+  const modelLowerCaseName = name.toLowerCase();
+  const modelUpperCaseName = name.toUpperCase();
+  const template = `import EProTable, { SchemaType, commonRequest } from '@/components/EProTable';
   import trpc, { RouterOutput } from '@/trpc';
   import { withAuth } from '@/utils/authUtil';
-  import {
-    ActionType,
-    BetaSchemaForm,
-    ProColumns,
-    ProFormColumnsType,
-  } from '@ant-design/pro-components';
+  import { ActionType, BetaSchemaForm } from '@ant-design/pro-components';
   import AuthTree from '@bta/common/AuthTree';
-  import { Button, FormInstance, Popconfirm, Space, message } from 'antd';
+  import { Link } from '@umijs/max';
+  import {
+    Button,
+    FormInstance,
+    Popconfirm,
+    SelectProps,
+    Space,
+    SwitchProps,
+    message,
+  } from 'antd';
   import React, { useRef } from 'react';
+  import withKeepAlive from '@/components/withKeepAlive';
+  import useQueryToForm from '@/hooks/useQueryToForm';
   
   const {
-    accountRouter: {
-      changePassword,
-      queryAccounts,
-      updateAccount,
-      createAccount,
-      deleteAccount,
-    },
+    ${modelFields
+      .map(
+        (field) =>
+          `${field.name.toLocaleLowerCase() as string}Router: { query${
+            field.name
+          } }`,
+      )
+      .join(', ')},
+    ${modelLowerCaseName}Router: { query${name}s, update${name}, create${name}, delete${name} },
   } = trpc;
   
-  type Account = RouterOutput['accountRouter']['queryAccounts']['data'][number];
+  type ${name} = RouterOutput['${name}Router']['query${name}s']['data'][number];
   
-  type SchemaType<T> = ProColumns<T> & ProFormColumnsType<T>;
-  
-  const AccountList: React.FC = () => {
+  const ${name}List: React.FC = () => {
     const actionRef = useRef<ActionType>();
     const formRef = useRef<FormInstance>();
     useQueryToForm(formRef);
   
-    const renderChangePasswordForm = (record: Account) =>
-      withAuth(
-        <BetaSchemaForm<{
-          password: string;
-          confirmPassword: string;
-        }>
-          layoutType="ModalForm"
-          initialValues={record}
-          width={400}
-          columns={[
-            {
-              title: '密码',
-              dataIndex: 'password',
-              valueType: 'password',
-              formItemProps: {
-                rules: [
-                  {
-                    required: true,
-                  },
-                ],
-              },
-            },
-            {
-              title: '确认密码',
-              dataIndex: 'confirmPassword',
-              valueType: 'password',
-              formItemProps: (form) => ({
-                required: true,
-                rules: [
-                  {
-                    required: true,
-                  },
-                  {
-                    validator(rule, value, callback) {
-                      const password = form.getFieldValue('password');
-                      if (password !== value) {
-                        return callback('两次输入密码不一致');
-                      }
-                      return callback();
-                    },
-                  },
-                ],
-              }),
-            },
-          ]}
-          trigger={
-            <Button type="link" size="small">
-              修改密码
-            </Button>
-          }
-          onFinish={async (value) => {
-            console.log(value);
-  
-            await changePassword.mutate({
-              password: value.password,
-              id: record.id,
-              version: record.version,
-            });
-            actionRef.current?.reload();
-            return true;
-          }}
-        />,
-        AuthTree.accountModule.changePassword.code,
-      );
-  
-    const renderEditForm = (record: Account) =>
-      withAuth(
-        <BetaSchemaForm<Account>
-          layoutType="ModalForm"
-          initialValues={record}
-          width={400}
-          columns={getSchemas().filter((item) => item.dataIndex !== 'password')}
-          trigger={
-            <Button type="link" size="small">
-              编辑
-            </Button>
-          }
-          onFinish={async (value) => {
-            await updateAccount.mutate({
-              ...value,
-              id: record.id,
-              version: record.version,
-            });
-            actionRef.current?.reload();
-            return true;
-          }}
-        />,
-        AuthTree.accountModule.update.code,
-      );
-  
-    const renderCreateForm = () =>
-      withAuth(
-        <BetaSchemaForm<Account & { password: string }>
-          layoutType="ModalForm"
-          width={400}
-          // @ts-ignore
-          columns={getSchemas()}
-          trigger={<Button>新增</Button>}
-          onFinish={async (value) => {
-            await createAccount.mutate(value);
-            actionRef.current?.reload();
-            return true;
-          }}
-        />,
-        AuthTree.accountModule.create.code,
-      );
-  
-    const renderDeleteButton = (record: Account) =>
-      withAuth(
-        <Popconfirm
-          title="确认删除？"
-          onConfirm={async () => {
-            await deleteAccount.mutate({
-              id: record.id,
-              version: record.version,
-            });
-            message.success('删除成功');
-            actionRef.current?.reload();
-            return true;
-          }}
-        >
-          <Button type="link" danger size="small">
-            删除
-          </Button>
-        </Popconfirm>,
-        AuthTree.accountModule.delete.code,
-      );
-  
-    const getSchemas = (): SchemaType<Account>[] => [
+    const getSchema = (): SchemaType<${name}>[] => [
       {
         title: 'id',
+        sorter: true,
         dataIndex: 'id',
         hideInForm: true,
         valueType: 'id' as any,
       },
       {
-        title: '账号',
-        dataIndex: 'account',
+        title: '用户名',
+        dataIndex: '',
         valueType: 'text',
         formItemProps: {
           rules: [
@@ -183,35 +67,45 @@ export const generateUmiTemplate = () => {
         fixed: 'left',
       },
       {
-        title: '密码',
-        dataIndex: 'password',
-        valueType: 'password',
-        formItemProps: {
-          rules: [
-            {
-              required: true,
-            },
-          ],
+        title: '头像Url',
+        dataIndex: 'avatar',
+        valueType: 'text',
+      },
+      {
+        title: '是否禁用',
+        sorter: true,
+        dataIndex: 'isBanned',
+        valueType: 'switch',
+        fieldProps: {
+          checkedChildren: '是',
+          unCheckedChildren: '否',
+        } as SwitchProps,
+      },
+      {
+        title: '角色',
+        dataIndex: 'roleId',
+        valueType: 'select',
+        request: queryRolesRequest,
+        render(text, record, index, action) {
+          return <Link to={\`/role ? id = \${ record.roleId }\`}>{text}</Link>;
         },
-        hideInTable: true,
-        hideInSearch: true,
+        fieldProps: {
+          showSearch: true,
+          placeholder: '搜索角色',
+        } as SelectProps,
       },
       {
-        title: '邮箱',
-        dataIndex: 'email',
-        valueType: 'text',
-      },
-      {
-        title: '手机号',
-        dataIndex: 'phoneNumber',
-        valueType: 'text',
-      },
-      {
-        title: '创建时间',
-        dataIndex: 'createAt',
-        valueType: 'dateTime',
-        hideInForm: true,
-        hideInSearch: true,
+        title: '账户',
+        dataIndex: 'accountId',
+        valueType: 'select',
+        request: queryAccountsRequest,
+        render(text, record, index, action) {
+          return <Link to={\`/account?id=\${record.roleId}\`}>{text}</Link>;
+        },
+        fieldProps: {
+          showSearch: true,
+          placeholder: '搜索账户',
+        } as SelectProps,
       },
       {
         title: '创建时间',
@@ -245,21 +139,113 @@ export const generateUmiTemplate = () => {
         dataIndex: 'options',
         valueType: 'option',
         render: (_, record) => (
-          <Space.Compact>
+          <Space>
             {renderEditForm(record)}
-            {renderDeleteButton(record)}
-            {renderChangePasswordForm(record)}
-          </Space.Compact>
+            {renderDeleteForm(record)}
+          </Space>
         ),
         fixed: 'right',
       },
     ];
   
+    const queryRolesRequest = async (params: any) =>
+      (
+        await queryRoles.query({
+          filter: {
+            roleName: params.keyword || '',
+          },
+          page: {
+            current: 1,
+            pageSize: 100,
+          },
+        })
+      ).data.map((item) => ({
+        label: item.roleName,
+        value: item.id,
+      }));
+  
+    const queryAccountsRequest = async (params: any) =>
+      (
+        await queryAccounts.query({
+          filter: {
+            account: params.keyword || '',
+          },
+          page: {
+            current: 1,
+            pageSize: 100,
+          },
+        })
+      ).data.map((item) => ({
+        label: item.account,
+        value: item.id,
+      }));
+  
+    const renderCreateForm = () =>
+      withAuth(
+        <BetaSchemaForm<${name}>
+          layoutType="ModalForm"
+          width={400}
+          columns={getSchema()}
+          trigger={<Button>新增</Button>}
+          onFinish={async (value) => {
+            await createUser.mutate(value);
+            actionRef.current?.reload();
+            return true;
+          }}
+        />,
+        AuthTree.${modelLowerCaseName}Module.create.code,
+      );
+  
+    const renderEditForm = (record: ${name}) =>
+      withAuth(
+        <BetaSchemaForm<${name}>
+          layoutType="ModalForm"
+          initialValues={record}
+          width={400}
+          columns={getSchema()}
+          trigger={
+            <Button type="primary" size="small">
+              编辑
+            </Button>
+          }
+          onFinish={async (value) => {
+            await updateUser.mutate({
+              ...value,
+              id: record.id,
+              version: record.version,
+            });
+            actionRef.current?.reload();
+            return true;
+          }}
+        />,
+        AuthTree.${modelLowerCaseName}Module.update.code,
+      );
+  
+    const renderDeleteForm = (record: ${name}) =>
+      withAuth(
+        <Popconfirm
+          title="确认删除？"
+          onConfirm={async () => {
+            await deleteUser.mutate({
+              id: record.id,
+              version: record.version,
+            });
+            message.success('删除成功');
+            actionRef.current?.reload();
+          }}
+        >
+          <Button danger size="small">
+            删除
+          </Button>
+        </Popconfirm>,
+        AuthTree.${modelLowerCaseName}Module.delete.code,
+      );
+  
     return (
-      <EProTable<Account>
+      <EProTable<${name}>
+        formRef={formRef}
         headerTitle="查询表格"
         actionRef={actionRef}
-        formRef={formRef}
         rowKey="id"
         size="small"
         search={{
@@ -267,14 +253,14 @@ export const generateUmiTemplate = () => {
           labelWidth: 50,
         }}
         toolBarRender={() => [renderCreateForm()]}
-        request={commonRequest(queryAccounts.query)}
-        columns={getSchemas()}
+        request={commonRequest(queryUsers.query)}
+        columns={getSchema()}
         rowSelection={{}}
       />
     );
   };
   
-  export default withKeepAlive(AccountList);
+  export default withKeepAlive(UserList);
   
   `;
 };

@@ -23,15 +23,19 @@ export type SchemaType<T> = ProColumns<T> & ProFormColumnsType<T>;
 
 export const formatTableColumns = <T extends ProColumns<any, any>>(
   columns: T[],
+  applyCustomWidth = false,
 ): T[] => {
   const defaultEColumn = COLUMN_VALUE_TYPE_MAP['default'];
+
   return columns.map((item) => {
     const extendsColumn = COLUMN_VALUE_TYPE_MAP[item.valueType as string];
+    const customColumn = extendsColumn || defaultEColumn;
     return {
-      ...(extendsColumn || defaultEColumn),
+      ...customColumn,
       ...item,
+      width: applyCustomWidth ? customColumn.width : item.width,
       fieldProps: {
-        ...extendsColumn,
+        ...(extendsColumn?.fieldProps || {}),
         ...item.fieldProps,
       },
       valueType: extendsColumn?.valueType || item.valueType,
@@ -68,7 +72,7 @@ const EProTable = <
   props: EProTableProps<DataType, Params, ValueType>,
 ) => {
   const newColumns = useMemo(
-    () => formatTableColumns(props.columns || []),
+    () => formatTableColumns(props.columns || [], true),
     [props.columns],
   );
 
@@ -80,9 +84,12 @@ const EProTable = <
       ),
     [newColumns],
   );
+
   return (
     <ProTable {...props} columns={newColumns} scroll={{ x: tableWidth }} />
   );
 };
+
+export { ProProvider } from '@ant-design/pro-components';
 
 export default EProTable;

@@ -31,12 +31,19 @@ model Account {
   id Int @id @default(autoincrement())
   account String
   ///@zod=z.string().regex(/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,15}$/,'密码必须包含数字与字母且大于6位小于15位')
+  ///@label='密码'
   password String
+  ///@label='邮箱'
   email String?
+  ///@label='手机号码'
   phoneNumber String?
+  ///@label='用户信息'
   user User?
+  ///@label='创建时间'
   createAt DateTime @default(now())
+  ///@label='更新时间'
   updateAt DateTime @updatedAt @default(now())
+  ///@label='删除时间'
   deleteAt DateTime?
   version Int @default(1)
 }
