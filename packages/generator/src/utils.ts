@@ -30,7 +30,7 @@ export const getEnumFields = (fields: DMMF.Field[]) => {
   return fields.filter((item) => item.kind === 'enum');
 };
 
-export const writeFiles = (
+export const writeFiles = async (
   list: { fileName: string; template: string }[],
   relationPath = '',
 ) => {
@@ -38,7 +38,7 @@ export const writeFiles = (
   if (!fs.existsSync(savePath)) {
     fs.mkdirSync(savePath, { recursive: true });
   }
-  list.forEach(async (item) => {
+  for (const item of list) {
     const formattedTemplate =
       (await prettier
         .format(item.template, {
@@ -55,5 +55,5 @@ export const writeFiles = (
         err && console.log(err);
       },
     );
-  });
+  }
 };

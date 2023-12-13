@@ -24,26 +24,26 @@ export function onManifest(): GeneratorManifest {
 export async function onGenerate(options: GeneratorOptions) {
   try {
     console.log(JSON.stringify(options.dmmf.datamodel, null, 2));
-    handleZodTemplate(options);
-    handleTRPCTemplate(options);
+    await handleZodTemplate(options);
+    await handleTRPCTemplate(options);
   } catch (e) {
     console.error(e);
   }
 }
 
-const handleZodTemplate = (options: GeneratorOptions) => {
+const handleZodTemplate = async (options: GeneratorOptions) => {
   const enumSchema = options.dmmf.datamodel.enums.map(generateZodEnumSchema);
   const modelSchema = options.dmmf.datamodel.models.map(generateZodModelSchema);
 
   const templates = modelSchema.concat(enumSchema);
   templates.push(createIndex(templates));
-  writeFiles(templates, config.zod.outputPath);
+  await writeFiles(templates, config.zod.outputPath);
 };
 
-const handleTRPCTemplate = (options: GeneratorOptions) => {
+const handleTRPCTemplate = async (options: GeneratorOptions) => {
   const routers = options.dmmf.datamodel.models.map(generateTRPCTemplate);
 
-  writeFiles(routers, config.trpc.outputPath);
+  await writeFiles(routers, config.trpc.outputPath);
 };
 
 generatorHandler({
