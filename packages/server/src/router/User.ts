@@ -30,10 +30,13 @@ const userRouter = router({
         account: true,
       }),
     )
-    .mutation(async ({ input: { password, account } }) =>
-      userServer.signIn(password, account),
-    ),
-  getUserInfoByToken: authProcedure.query(({ ctx }) => ctx.user),
+    .mutation(async ({ input: { password, account } }) => {
+      return userServer.signIn(password, account);
+    }),
+  getUserInfoByToken: authProcedure.query(({ ctx }) => {
+    console.log(ctx.user);
+    return ctx.user;
+  }),
   queryUsers: authProcedure
     .meta({
       permission: AuthTree.userModule.code,

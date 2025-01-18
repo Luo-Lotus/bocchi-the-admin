@@ -1,10 +1,10 @@
 import { procedure } from '../initTRPC';
 import authMiddleWare from '../middlewares/auth';
+import loggerMiddleware from '../middlewares/logger';
 import permissionMiddleWare from '../middlewares/permission';
-import publicProcedure from './public';
 
 const authProcedure = procedure
-  .unstable_concat(publicProcedure)
+  .use(loggerMiddleware)
   .use(authMiddleWare)
   .use(permissionMiddleWare);
 
