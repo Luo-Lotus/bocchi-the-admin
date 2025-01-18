@@ -1,5 +1,5 @@
 import { AppRouter } from '@bta/server/src/router';
-import { createTRPCProxyClient, httpBatchLink, loggerLink } from '@trpc/client';
+import { createTRPCClient, httpBatchLink, loggerLink } from '@trpc/client';
 import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import _ from 'lodash';
 import SuperJSON from 'superjson';
@@ -8,19 +8,19 @@ import { customLink } from './links/customLink';
 
 const isProduction = process.env.NODE_ENV !== 'development';
 
-const client = createTRPCProxyClient<AppRouter>({
-  transformer: SuperJSON,
+const client = createTRPCClient<AppRouter>({
   links: _.compact([
     !isProduction && loggerLink(),
     customLink,
     httpBatchLink({
-      url: 'http://localhost:3000/api',
+      url: 'http://localhost:3521/api',
       // You can pass any HTTP headers you wish here
       async headers() {
         return {
           authorization: getToken() || '',
         };
       },
+      transformer: SuperJSON,
     }),
   ]),
 });

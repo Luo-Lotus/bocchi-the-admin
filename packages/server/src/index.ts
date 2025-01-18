@@ -10,7 +10,7 @@ import { renderTrpcPanel } from 'trpc-panel';
 
 dotenv.config();
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3521 } = process.env;
 
 const server = fastify({
   maxParamLength: 5000,
@@ -35,7 +35,7 @@ server.register(fastifyTRPCPlugin, {
 server.get('/api/docs', (_, res) => {
   return res.header('content-type', 'text/html').send(
     renderTrpcPanel(appRouter, {
-      url: 'http://localhost:3000/api', // 文档中发送请求的url
+      url: 'http://localhost:3521/api', // 文档中发送请求的url
       transformer: 'superjson',
     }),
   );
@@ -47,6 +47,7 @@ server.get('/api/docs', (_, res) => {
     await server.listen({ port: Number(PORT), host: '0.0.0.0' });
     console.log(`server started on port ${PORT}`);
   } catch (err) {
+    console.log(err);
     server.log.error(err);
     process.exit(1);
   }
